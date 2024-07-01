@@ -1,0 +1,21 @@
+diff --color -urN pkg-config-0.29.2-orig/Makefile.vc pkg-config-0.29.2/Makefile.vc
+--- pkg-config-0.29.2-orig/Makefile.vc	2016-04-12 05:39:26.000000000 +0800
++++ pkg-config-0.29.2/Makefile.vc	2024-05-31 09:24:59.930994500 +0800
+@@ -73,7 +73,7 @@
+ 	@-if exist $@.manifest mt /manifest $@.manifest /outputresource:$@;1
+ 
+ $(CFG)\$(PLAT)\pkg-config:
+-	@-mkdir $@
++	@-cmd /c "mkdir $@"
+ 
+ config.h: config.h.win32
+ 	@-copy $@.win32 $@
+@@ -84,7 +84,7 @@
+ 	@-del /f /q $(CFG)\$(PLAT)\*.exe
+ 	@-del /f /q $(CFG)\$(PLAT)\*.ilk
+ 	@-del /f /q $(CFG)\$(PLAT)\pkg-config\*.obj
+-	@-rmdir /s /q $(CFG)\$(PLAT)
++	@-cmd /c "rmdir /s /q $(CFG)"
+ 	@-del vc$(VSVER)0.pdb
+ 	@-del config.h
+ 

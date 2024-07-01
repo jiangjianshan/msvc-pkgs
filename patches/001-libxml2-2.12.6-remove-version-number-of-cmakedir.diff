@@ -1,0 +1,34 @@
+diff --color -urN libxml2-2.12.6-orig/CMakeLists.txt libxml2-2.12.6/CMakeLists.txt
+--- libxml2-2.12.6-orig/CMakeLists.txt	2024-03-15 19:08:47.000000000 +0800
++++ libxml2-2.12.6/CMakeLists.txt	2024-06-05 09:19:39.683694000 +0800
+@@ -616,12 +616,12 @@
+ 
+ configure_package_config_file(
+ 	libxml2-config.cmake.cmake.in libxml2-config.cmake
+-	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
++	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
+ )
+ 
+ install(
+ 	FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2-config.cmake
+-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
+ 	COMPONENT development
+ )
+ 
+@@ -633,13 +633,13 @@
+ 
+ install(
+ 	FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2-config-version.cmake
+-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
+ 	COMPONENT development
+ )
+ 
+ install(
+ 	EXPORT LibXml2
+-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2-${PROJECT_VERSION}
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxml2
+ 	NAMESPACE LibXml2::
+ 	FILE libxml2-export.cmake
+ 	COMPONENT development
