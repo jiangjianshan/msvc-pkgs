@@ -1,0 +1,12 @@
+diff --color -urN zstd-1.5.6-orig/build/VS2010/libzstd-dll/libzstd-dll.rc zstd-1.5.6/build/VS2010/libzstd-dll/libzstd-dll.rc
+--- zstd-1.5.6-orig/build/VS2010/libzstd-dll/libzstd-dll.rc	2024-05-22 15:48:13.756508000 +0800
++++ zstd-1.5.6/build/VS2010/libzstd-dll/libzstd-dll.rc	2024-05-22 15:44:04.294550200 +0800
+@@ -1,7 +1,7 @@
+ // Microsoft Visual C++ generated resource script.
+ //
+ 
+-#include "zstd.h" /* ZSTD_VERSION_STRING */
++#include "../../../lib/zstd.h" /* ZSTD_VERSION_STRING */
+ #define APSTUDIO_READONLY_SYMBOLS
+ #include "verrsrc.h"
+ #undef APSTUDIO_READONLY_SYMBOLS

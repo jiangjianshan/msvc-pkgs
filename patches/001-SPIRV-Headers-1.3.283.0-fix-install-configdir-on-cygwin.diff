@@ -1,0 +1,19 @@
+diff --color -urN SPIRV-Headers-1.3.283.0-orig/CMakeLists.txt SPIRV-Headers-1.3.283.0/CMakeLists.txt
+--- SPIRV-Headers-1.3.283.0-orig/CMakeLists.txt	2024-03-27 23:37:11.000000000 +0800
++++ SPIRV-Headers-1.3.283.0/CMakeLists.txt	2024-07-02 13:50:22.296864700 +0800
+@@ -48,7 +48,7 @@
+ 
+     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/spirv DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+-    set(cmake_install_dir "${CMAKE_INSTALL_DATADIR}/cmake/SPIRV-Headers")
++    set(cmake_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/SPIRV-Headers")
+     set(version_config "${CMAKE_CURRENT_BINARY_DIR}/generated/SPIRV-HeadersConfigVersion.cmake")
+ 
+     write_basic_package_version_file("${version_config}" COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT)
+@@ -63,5 +63,5 @@
+         set(SPIRV_HEADERS_PKGCONFIG_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
+     endif()
+     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/SPIRV-Headers.pc.in ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Headers.pc @ONLY)
+-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Headers.pc" DESTINATION ${CMAKE_INSTALL_DATADIR}/pkgconfig)
++    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Headers.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ endif()

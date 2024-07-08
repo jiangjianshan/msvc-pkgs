@@ -1,0 +1,26 @@
+diff --color -urN libgeotiff-1.7.1-orig/cmake/CMakeLists.txt libgeotiff-1.7.1/cmake/CMakeLists.txt
+--- libgeotiff-1.7.1-orig/cmake/CMakeLists.txt	2022-02-18 23:07:34.000000000 +0800
++++ libgeotiff-1.7.1/cmake/CMakeLists.txt	2024-06-01 23:08:01.931045100 +0800
+@@ -10,8 +10,8 @@
+   set (INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}")
+   set (PROJECT_ROOT_DIR "../../..")
+ else ()
+-  set (INSTALL_CMAKE_DIR "cmake")
+-  set (PROJECT_ROOT_DIR "..")
++  set (INSTALL_CMAKE_DIR "lib/cmake/${PROJECT_NAME}")
++  set (PROJECT_ROOT_DIR "../../..")
+ endif ()
+ 
+ configure_file (project-config.cmake.in project-config.cmake @ONLY)
+diff --color -urN libgeotiff-1.7.1-orig/CMakeLists.txt libgeotiff-1.7.1/CMakeLists.txt
+--- libgeotiff-1.7.1-orig/CMakeLists.txt	2022-03-10 16:32:14.000000000 +0800
++++ libgeotiff-1.7.1/CMakeLists.txt	2024-06-01 23:06:30.466063400 +0800
+@@ -263,7 +263,7 @@
+ # Install doc files
+ INSTALL(FILES
+     AUTHORS ChangeLog COPYING INSTALL LICENSE README README_BIN README.WIN
+-    DESTINATION doc)
++    DESTINATION "share/doc/${PROJECT_NAME}")
+ 
+ # Install man pages
+ INSTALL(FILES ${GEOTIFF_MAN_PAGES} DESTINATION share/man/man1)

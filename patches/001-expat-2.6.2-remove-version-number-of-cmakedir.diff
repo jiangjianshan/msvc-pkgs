@@ -1,0 +1,28 @@
+diff --color -urN expat-2.6.2-orig/CMakeLists.txt expat-2.6.2/CMakeLists.txt
+--- expat-2.6.2-orig/CMakeLists.txt	2024-03-14 00:38:11.000000000 +0800
++++ expat-2.6.2/CMakeLists.txt	2024-06-05 10:06:39.955338900 +0800
+@@ -849,7 +849,7 @@
+         cmake/expat-config.cmake.in
+         cmake/expat-config.cmake
+     INSTALL_DESTINATION
+-        ${CMAKE_INSTALL_LIBDIR}/cmake/expat-${PROJECT_VERSION}/
++        ${CMAKE_INSTALL_LIBDIR}/cmake/expat/
+ )
+ write_basic_package_version_file(
+     cmake/expat-config-version.cmake
+@@ -866,13 +866,13 @@
+         ${CMAKE_CURRENT_BINARY_DIR}/cmake/expat-config.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/cmake/expat-config-version.cmake
+     DESTINATION
+-        ${CMAKE_INSTALL_LIBDIR}/cmake/expat-${PROJECT_VERSION}/
++        ${CMAKE_INSTALL_LIBDIR}/cmake/expat/
+ )
+ expat_install(
+     EXPORT
+         expat
+     DESTINATION
+-        ${CMAKE_INSTALL_LIBDIR}/cmake/expat-${PROJECT_VERSION}/
++        ${CMAKE_INSTALL_LIBDIR}/cmake/expat/
+     NAMESPACE
+         expat::
+ )

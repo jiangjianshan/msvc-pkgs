@@ -1,0 +1,41 @@
+diff --color -urN openssl-3.3.0-orig/Configurations/windows-makefile.tmpl openssl-3.3.0/Configurations/windows-makefile.tmpl
+--- openssl-3.3.0-orig/Configurations/windows-makefile.tmpl	2024-04-09 20:12:22.000000000 +0800
++++ openssl-3.3.0/Configurations/windows-makefile.tmpl	2024-05-31 13:46:05.414100600 +0800
+@@ -627,27 +627,27 @@
+ install_html_docs: install_image_docs build_html_docs
+ 	@if "$(INSTALLTOP)"=="" ( echo INSTALLTOP should not be empty & exit 1 )
+ 	@echo *** Installing HTML docs
+-	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\html\man1"
+-	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\html\man3"
+-	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\html\man5"
+-	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\html\man7"
++	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\share\html\man1"
++	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\share\html\man3"
++	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\share\html\man5"
++	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\share\html\man7"
+ 	@"$(PERL)" "$(SRCDIR)\util\copy.pl" $(BLDDIR)\doc\html\man1\*.html \
+-                                        "$(INSTALLTOP)\html\man1"
++                                        "$(INSTALLTOP)\share\html\man1"
+ 	@"$(PERL)" "$(SRCDIR)\util\copy.pl" $(BLDDIR)\doc\html\man3\*.html \
+-                                        "$(INSTALLTOP)\html\man3"
++                                        "$(INSTALLTOP)\share\html\man3"
+ 	@"$(PERL)" "$(SRCDIR)\util\copy.pl" $(BLDDIR)\doc\html\man5\*.html \
+-                                        "$(INSTALLTOP)\html\man5"
++                                        "$(INSTALLTOP)\share\html\man5"
+ 	@"$(PERL)" "$(SRCDIR)\util\copy.pl" $(BLDDIR)\doc\html\man7\*.html \
+-                                        "$(INSTALLTOP)\html\man7"
++                                        "$(INSTALLTOP)\share\html\man7"
+ 
+ uninstall_html_docs: uninstall_image_docs
+ 
+ install_image_docs:
+ 	@if "$(INSTALLTOP)"=="" ( echo INSTALLTOP should not be empty & exit 1 )
+ 	@echo *** Installing HTML images
+-	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\html\man7\img"
++	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(INSTALLTOP)\share\html\man7\img"
+ 	@"$(PERL)" "$(SRCDIR)\util\copy.pl" $(SRCDIR)\doc\man7\img\*.png \
+-                                        "$(INSTALLTOP)\html\man7\img"
++                                        "$(INSTALLTOP)\share\html\man7\img"
+ 
+ uninstall_image_docs:
+ 

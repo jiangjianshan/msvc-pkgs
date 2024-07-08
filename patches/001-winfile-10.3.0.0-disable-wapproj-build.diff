@@ -1,0 +1,12 @@
+diff --color -urN winfile-10.3.0.0-orig/Winfile.sln winfile-10.3.0.0/Winfile.sln
+--- winfile-10.3.0.0-orig/Winfile.sln	2024-03-25 03:12:11.000000000 +0800
++++ winfile-10.3.0.0/Winfile.sln	2024-07-02 08:36:17.925568500 +0800
+@@ -13,8 +13,6 @@
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExeView", "tools\ExeView\ExeView.vcxproj", "{23717B8E-CA4A-412F-A4EA-5E6899143EC7}"
+ EndProject
+-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "Package", "Package\Package.wapproj", "{AC921D51-18E2-4FBE-A444-059543458C00}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2C73F3F2-606A-4B7B-B473-3E5A8AC467FB}"
+ 	ProjectSection(SolutionItems) = preProject
+ 		README.md = README.md
