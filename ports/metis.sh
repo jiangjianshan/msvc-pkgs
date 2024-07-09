@@ -5,15 +5,15 @@
 # be found'
 # export PATH_SEPARATOR=";"
 
-DEPENDS=
+DEPENDS='gklib'
 FWD=`dirname $(pwd)`
 CWD=$(cd `dirname $0`; pwd)
-PKG_NAME=gklib
-PKG_VER=5.1.1
-PKG_URL=https://github.com/KarypisLab/GKlib/archive/refs/tags/METIS-v$PKG_VER-DistDGL-0.5.tar.gz
+PKG_NAME=METIS
+PKG_VER=5.2.1
+PKG_URL=https://github.com/KarypisLab/METIS/archive/refs/tags/v$PKG_VER.tar.gz
 PKGS_DIR=$FWD/pkgs
 SRC_DIR=$PKGS_DIR/$PKG_NAME-$PKG_VER
-BUILD_DIR=$FWD/builds/$PKG_NAME-$PKG_VER
+BUILD_DIR=$SRC_DIR/build/windows
 
 . $FWD/common.sh
 
@@ -26,7 +26,7 @@ clean_build()
       rm -rf $BUILD_DIR
     else
       pushd $BUILD_DIR
-      ninja clean
+      make clean
       popd
     fi
   fi
@@ -36,7 +36,22 @@ patch_package()
 {
   echo [$0] Patching package $PKG_NAME $PKG_VER
   pushd $SRC_DIR
-  patch -Np1 -i $PATCHES_DIR/001-gklib-5.1.1-fix-compile-error-C2371.diff
+  patch -Np1 -i $PATCHES_DIR/001-METIS-5.2.1-fix-compile-link-errors.diff
+  popd
+  pushd $SRC_DIR/include
+  if [ "$ARCH" == "x86" ]; then
+    sed                                                                \
+      -e 's|\/\/#define IDXTYPEWIDTH 32|#define IDXTYPEWIDTH 32|g'     \
+      -e 's|\/\/#define REALTYPEWIDTH 32|#define REALTYPEWIDTH 32|g'   \
+      metis.h > metis.h-t
+    mv metis.h-t metis.h
+  else
+    sed                                                                \
+      -e 's|\/\/#define IDXTYPEWIDTH 32|#define IDXTYPEWIDTH 64|g'     \
+      -e 's|\/\/#define REALTYPEWIDTH 32|#define REALTYPEWIDTH 64|g'   \
+      metis.h > metis.h-t
+    mv metis.h-t metis.h
+  fi
   popd
 }
 
@@ -59,7 +74,6 @@ prepare_package()
   if [ ! -d "$SRC_DIR" ]; then
     cd $PKGS_DIR
     tar -xzvf $TAGS_DIR/$archive || print_error
-    mv GKlib-METIS-v$PKG_VER-DistDGL-0.5 $PKG_NAME-$PKG_VER
     patch_package
   fi
   if [ ! -d "$BUILD_DIR" ]; then mkdir -p "$BUILD_DIR"; fi
@@ -69,44 +83,31 @@ configure_package()
 {
   echo [$0] Configuring $PKG_NAME $PKG_VER
   check_triplet
-  cd $BUILD_DIR
-  OPTIONS='-MD -fp:precise -diagnostics:column -wd4819 -openmp:llvm'
+  cd $SRC_DIR
+  OPTIONS='-MD -fp:precise -diagnostics:column -wd4819'
   DEFINES="-DWIN32 -D_WIN32_WINNT=$WIN32_TARGET -D_CRT_DECLARE_NONSTDC_NAMES -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE"
   # NOTE:
   # 1. Don't install cygwin's cmake because it will use gcc-like compile
   #    command. To use windows's cmake, here have to use 'cygpath -m' to
   #    convert path to windows path but not cygwin path
   # 2. Don't set cmake generator to 'Unix Makefiles' if use MSYS2 shell
-  # TODO: Fail if use '-DBUILD_SHARED_LIBS=ON'
-  cmake -G "Ninja"                                                                                             \
-    -DCMAKE_BUILD_TYPE=Release                                                                                 \
-    -DCMAKE_C_COMPILER=cl                                                                                      \
-    -DCMAKE_C_FLAGS="$OPTIONS $DEFINES $INCLUDES"                                                              \
-    -DCMAKE_CXX_COMPILER=cl                                                                                    \
-    -DCMAKE_INSTALL_PREFIX="$PREFIX_M"                                                                         \
-    -DCMAKE_PREFIX_PATH="$PREFIX_PATH_M"                                                                       \
-    -DOPENMP=ON                                                                                                \
-    -DGKREGEX=ON                                                                                               \
-    -DGKRAND=ON                                                                                                \
-    $SRC_DIR_M > >(build_log) 2>&1 || print_error
+  cmd /c "vsgen.bat -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=cl -DCMAKE_C_FLAGS="$OPTIONS $DEFINES $INCLUDES" -DCMAKE_CXX_COMPILER=cl -DCMAKE_CXX_FLAGS="-EHsc $OPTIONS $DEFINES $INCLUDES" -DCMAKE_INSTALL_PREFIX="$PREFIX_M" -DCMAKE_PREFIX_PATH="$PREFIX_PATH_M" -DGKLIB_PATH="$PREFIX_M" -DOPENMP=ON -DGKREGEX=ON -DGKRAND=ON" > >(build_log) 2>&1 || print_error
 }
 
 build_package()
 {
   echo [$0] Building $PKG_NAME $PKG_VER
   cd $BUILD_DIR
-  ninja -j$(nproc) > >(build_log) 2>&1 || print_error
+  cmd /c "msbuild METIS.sln /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143 /p:UseEnv=true /p:SkipUWP=true" > >(build_log) 2>&1 || print_error
 }
 
 install_package()
 {
   echo [$0] Installing $PKG_NAME $PKG_VER
   cd $BUILD_DIR
-  ninja install > >(build_log) 2>&1 || print_error
-  if [ ! -d "$PREFIX/include/win32" ]; then
-    mkdir -p "$PREFIX/include/win32"
-  fi
-  cp -v $SRC_DIR/win32/adapt.h $PREFIX/include/win32/adapt.h
+  cp -rv programs/Release/*.exe $PREFIX/bin > >(build_log) 2>&1 || print_error
+  cp -rv libmetis/Release/*.lib $PREFIX/lib > >(build_log) 2>&1 || print_error
+  cp -rv $SRC_DIR/include/*.h $PREFIX/include > >(build_log) 2>&1 || print_error
   clean_build
   build_ok
 }
