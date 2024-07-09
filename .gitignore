@@ -47,5 +47,5 @@ x86/
 */*.swp
 
 # Misc
-*.guess
+config.guess
 *.txt
