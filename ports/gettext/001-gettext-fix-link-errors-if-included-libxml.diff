@@ -1,0 +1,66 @@
+diff -urN gettext-0.26-orig/gettext-tools/src/Makefile.am gettext-0.26/gettext-tools/src/Makefile.am
+--- gettext-0.26-orig/gettext-tools/src/Makefile.am	2025-07-09 14:29:56.000000000 +0800
++++ gettext-0.26/gettext-tools/src/Makefile.am	2026-01-23 12:27:05.613055600 +0800
+@@ -398,7 +398,11 @@
+ urlget_SOURCES = urlget.c
+ cldr_plurals_SOURCES = cldr-plural.y cldr-plural-exp.c cldr-plurals.c
+ cldr_plurals_CFLAGS = $(AM_CFLAGS) $(INCXML)
++if INCLUDED_LIBXML
++cldr_plurals_LDADD = libgettextsrc.la ../gnulib-lib/libxml_rpl.la $(LDADD)
++else
+ cldr_plurals_LDADD = libgettextsrc.la $(LDADD)
++endif
+ 
+ if USE_INSTALLED_LIBTEXTSTYLE
+ LT_LIBTEXTSTYLE = @LTLIBTEXTSTYLE@
+@@ -439,8 +443,13 @@
+ else
+ WOE32_LIBADD =
+ endif
++if INCLUDED_LIBXML
++libgettextsrc_la_LIBADD       = ../gnulib-lib/libxml_rpl.la $(WOE32_LIBADD)
++libgettextsrc_la_DEPENDENCIES = ../gnulib-lib/libxml_rpl.la $(WOE32_LIBADD)
++else
+ libgettextsrc_la_LIBADD       = $(WOE32_LIBADD)
+ libgettextsrc_la_DEPENDENCIES = $(WOE32_LIBADD)
++endif
+ 
+ # How to build libgettextsrc.la.
+ # Need ../gnulib-lib/libgettextlib.la.
+diff -urN gettext-0.26-orig/gettext-tools/src/Makefile.in gettext-0.26/gettext-tools/src/Makefile.in
+--- gettext-0.26-orig/gettext-tools/src/Makefile.in	2025-07-20 03:57:10.000000000 +0800
++++ gettext-0.26/gettext-tools/src/Makefile.in	2026-01-23 13:11:23.064495200 +0800
+@@ -739,7 +739,11 @@
+ @WOE32_TRUE@am__DEPENDENCIES_3 = gettext.res
+ am__DEPENDENCIES_4 = ../gnulib-lib/libgettextlib.la \
+ 	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_3)
+-cldr_plurals_DEPENDENCIES = libgettextsrc.la $(am__DEPENDENCIES_4)
++@INCLUDED_LIBXML_FALSE@cldr_plurals_DEPENDENCIES = libgettextsrc.la \
++@INCLUDED_LIBXML_FALSE@	$(am__DEPENDENCIES_4)
++@INCLUDED_LIBXML_TRUE@cldr_plurals_DEPENDENCIES = libgettextsrc.la \
++@INCLUDED_LIBXML_TRUE@	../gnulib-lib/libxml_rpl.la \
++@INCLUDED_LIBXML_TRUE@	$(am__DEPENDENCIES_4)
+ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+@@ -4720,14 +4724,17 @@
+ urlget_SOURCES = urlget.c
+ cldr_plurals_SOURCES = cldr-plural.y cldr-plural-exp.c cldr-plurals.c
+ cldr_plurals_CFLAGS = $(AM_CFLAGS) $(INCXML)
+-cldr_plurals_LDADD = libgettextsrc.la $(LDADD)
++@INCLUDED_LIBXML_FALSE@cldr_plurals_LDADD = libgettextsrc.la $(LDADD)
++@INCLUDED_LIBXML_TRUE@cldr_plurals_LDADD = libgettextsrc.la ../gnulib-lib/libxml_rpl.la $(LDADD)
+ # Where to find the built libtextstyle library.
+ @USE_INSTALLED_LIBTEXTSTYLE_FALSE@LT_LIBTEXTSTYLE = ../../libtextstyle/lib/libtextstyle.la
+ @USE_INSTALLED_LIBTEXTSTYLE_TRUE@LT_LIBTEXTSTYLE = @LTLIBTEXTSTYLE@
+ @WOE32_FALSE@WOE32_LIBADD = 
+ @WOE32_TRUE@WOE32_LIBADD = libgettextsrc.res.lo
+-libgettextsrc_la_LIBADD = $(WOE32_LIBADD)
+-libgettextsrc_la_DEPENDENCIES = $(WOE32_LIBADD)
++@INCLUDED_LIBXML_FALSE@libgettextsrc_la_LIBADD = $(WOE32_LIBADD)
++@INCLUDED_LIBXML_TRUE@libgettextsrc_la_LIBADD = ../gnulib-lib/libxml_rpl.la $(WOE32_LIBADD)
++@INCLUDED_LIBXML_FALSE@libgettextsrc_la_DEPENDENCIES = $(WOE32_LIBADD)
++@INCLUDED_LIBXML_TRUE@libgettextsrc_la_DEPENDENCIES = ../gnulib-lib/libxml_rpl.la $(WOE32_LIBADD)
+ 
+ # How to build libgettextsrc.la.
+ # Need ../gnulib-lib/libgettextlib.la.

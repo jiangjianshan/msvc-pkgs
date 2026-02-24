@@ -2,5 +2,4 @@ name: sccache
 version: 0.12.0
 url: https://github.com/mozilla/sccache/archive/refs/tags/v0.12.0.tar.gz
 sha256: 309edaf43f44088e55e99ce14eb9cfdee8f85acad290171ebfd29eb9e368def3
-dependencies:
 script: build.bat

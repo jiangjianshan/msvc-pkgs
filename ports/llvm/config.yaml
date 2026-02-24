@@ -1,0 +1,26 @@
+name: llvm
+version: sycl
+url: https://github.com/intel/llvm.git
+recursive: false
+depth: 1
+dependencies:
+  required:
+    - boost
+    - bzip2
+    - gettext
+    - hwloc
+    - icu4c
+    - level-zero
+    - libffi
+    - libiconv
+    - libxml2
+    - lz4
+    - oneTBB
+    - OpenCL-Headers
+    - OpenCL-ICD-Loader
+    - perl
+    - SPIRV-Tools
+    - xz
+    - zlib
+    - zstd
+script: build.bat

@@ -5,7 +5,21 @@ recursive: true
 depth: 1
 dependencies:
   required:
+    - bzip2
     - Cbc
-    - pkg-config
+    - Cgl
+    - Clp
+    - CoinUtils
     - Ipopt
+    - lapack
+    - mspcrt
+    - Osi
+    - pkg-config
+    - spral
+    - SuiteSparse
+    - ThirdParty-ASL
+    - ThirdParty-Glpk
+    - ThirdParty-Metis
+    - ThirdParty-Mumps
+    - zlib
 script: build.bat

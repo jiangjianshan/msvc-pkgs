@@ -1,0 +1,8 @@
+name: aws-lc
+version: 1.67.0
+url: https://github.com/aws/aws-lc/archive/refs/tags/v1.67.0.tar.gz
+sha256: e592fc107d2376cc820b01b394f718cc1ef2ab92f12a4960a2294c621bc5df66
+dependencies:
+  required:
+    - nasm
+script: build.bat

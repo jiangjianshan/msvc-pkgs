@@ -1,0 +1,18 @@
+diff -urN DirectX-Headers-1.618.2-orig/CMakeLists.txt DirectX-Headers-1.618.2/CMakeLists.txt
+--- DirectX-Headers-1.618.2-orig/CMakeLists.txt	2025-10-16 02:58:21.000000000 +0800
++++ DirectX-Headers-1.618.2/CMakeLists.txt	2026-01-14 13:55:19.228177600 +0800
+@@ -83,12 +83,12 @@
+     configure_package_config_file(
+         "${CMAKE_CURRENT_SOURCE_DIR}/cmake/directx-headers-config.cmake.in"
+         "${CMAKE_CURRENT_BINARY_DIR}/directx-headers-config.cmake"
+-        INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/directx-headers/cmake)
++        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/directx-headers)
+ 
+     # Install the CMake config files
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/directx-headers-config.cmake"
+                 "${CMAKE_CURRENT_BINARY_DIR}/directx-headers-config-version.cmake"
+-            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/directx-headers/cmake)
++            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/directx-headers)
+     
+     # Create pkg-config file 
+     include(cmake/JoinPaths.cmake)

@@ -7,10 +7,10 @@ dependencies:
     - bzip2
     - c-blosc2
     - hdf5
+    - libaec
     - libpng
     - libsodium
     - libzmq
-    - mspcrt
     - sqlite
     - szip
     - zlib

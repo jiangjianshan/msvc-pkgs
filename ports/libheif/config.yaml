@@ -4,26 +4,29 @@ url: https://github.com/strukturag/libheif/archive/refs/tags/v1.20.2.tar.gz
 sha256: b70340395d84184bb8dfc833dd51c95ae049435f7ff9abc7b505a08b5ee2bd2a
 dependencies:
   required:
+    - brotli
     - dav1d
     - doxygen
     - ffmpeg
-    - mspcrt
     - kvazaar
     - libaom
     - libde265
     - libjpeg-turbo
     - libpng
-    - SVT-AV1
     - libtiff
+    - libwebp
+    - mspcrt
+    - openh264
+    - openjpeg
+    - OpenJPH
+    - rav1e
+    - SVT-AV1
     - uvg266
     - vmaf
-    - x265
-    - zlib
-    - openh264
-    - OpenJPH
     - VVdeC
     - VVenC
-    - rav1e
+    - x265
+    - zlib
   optional:
     - graphviz:required
 script: build.bat

@@ -10,4 +10,6 @@ submodules:
 dependencies:
   required:
     - gettext
+    - libiconv
+    - mspcrt
 script: build.sh

@@ -1,10 +1,12 @@
 name: cargo-c
-version: 0.10.8
-url: https://github.com/lu-zero/cargo-c/archive/refs/tags/v0.10.8.tar.gz
-sha256: 2c7bfff50e9c11801c92280f34f7d308857652b0c3875d0fd0906167623414ac
+version: 0.10.20
+url: https://github.com/lu-zero/cargo-c/archive/refs/tags/v0.10.20.tar.gz
+sha256: 9bdf7c10b44466a7c01dc4ed152da5031793cca9e0c8009d73223a32522cf2c3
 dependencies:
   required:
-    - pkg-config
     - curl
+    - mspcrt
+    - nghttp2
     - openssl
+    - pkg-config
 script: build.bat

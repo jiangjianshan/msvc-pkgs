@@ -6,6 +6,5 @@ dependencies:
   required:
     - libjpeg-turbo
     - libjxl
-    - llvm-project
     - XMP-Toolkit-SDK
 script: build.bat

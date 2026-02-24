@@ -1,6 +1,6 @@
 diff -urN Vol-1.5.4-orig/Vol/configure.ac Vol-1.5.4/Vol/configure.ac
 --- Vol-1.5.4-orig/Vol/configure.ac	2019-02-23 05:42:17.000000000 +0800
-+++ Vol-1.5.4/Vol/configure.ac	2025-03-28 13:41:13.351482700 +0800
++++ Vol-1.5.4/Vol/configure.ac	2026-01-13 18:22:59.274571300 +0800
 @@ -20,10 +20,6 @@
  This file is part of the open source package Coin which is distributed
  under the Eclipse Public License.])
@@ -63,7 +63,7 @@ diff -urN Vol-1.5.4-orig/Vol/configure.ac Vol-1.5.4/Vol/configure.ac
  AC_COIN_FINALIZE
 diff -urN Vol-1.5.4-orig/Vol/Makefile.am Vol-1.5.4/Vol/Makefile.am
 --- Vol-1.5.4-orig/Vol/Makefile.am	2019-02-23 05:42:17.000000000 +0800
-+++ Vol-1.5.4/Vol/Makefile.am	2025-03-28 13:41:13.356470600 +0800
++++ Vol-1.5.4/Vol/Makefile.am	2026-01-13 18:22:59.277536600 +0800
 @@ -83,7 +83,6 @@
  #                  Installation of the addlibs file                    #
  ########################################################################
@@ -87,7 +87,7 @@ diff -urN Vol-1.5.4-orig/Vol/Makefile.am Vol-1.5.4/Vol/Makefile.am
  	rm -f $(addlibsdir)/vol_addlibs.txt
 diff -urN Vol-1.5.4-orig/Vol/src/Makefile.am Vol-1.5.4/Vol/src/Makefile.am
 --- Vol-1.5.4-orig/Vol/src/Makefile.am	2019-02-23 05:42:17.000000000 +0800
-+++ Vol-1.5.4/Vol/src/Makefile.am	2025-03-29 12:33:06.857896100 +0800
++++ Vol-1.5.4/Vol/src/Makefile.am	2026-01-13 18:22:59.279531500 +0800
 @@ -31,16 +31,13 @@
  # "cygpath" stuff is necessary to compile with native compilers on Windows.
  # "top_srcdir" refers to the basic directory for the main package that is
@@ -110,7 +110,7 @@ diff -urN Vol-1.5.4-orig/Vol/src/Makefile.am Vol-1.5.4/Vol/src/Makefile.am
  includecoin_HEADERS = VolVolume.hpp
 diff -urN Vol-1.5.4-orig/Vol/src/OsiVol/Makefile.am Vol-1.5.4/Vol/src/OsiVol/Makefile.am
 --- Vol-1.5.4-orig/Vol/src/OsiVol/Makefile.am	2019-02-23 05:42:17.000000000 +0800
-+++ Vol-1.5.4/Vol/src/OsiVol/Makefile.am	2025-03-28 13:41:13.364717100 +0800
++++ Vol-1.5.4/Vol/src/OsiVol/Makefile.am	2026-01-15 13:55:10.347987400 +0800
 @@ -21,19 +21,14 @@
  	OsiVolSolverInterfaceIO.cpp
  
@@ -129,7 +129,7 @@ diff -urN Vol-1.5.4-orig/Vol/src/OsiVol/Makefile.am Vol-1.5.4/Vol/src/OsiVol/Mak
 -
 -# This line is necessary to allow VPATH compilation
 -DEFAULT_INCLUDES = -I. -I`$(CYGPATH_W) $(srcdir)` -I$(top_builddir)/inc
-+AM_CPPFLAGS = -I`$(CYGPATH_W) $(srcdir)/..` ${COINUTILS_CFLAGS} ${OSI_CFLAGS} -I. -I`$(CYGPATH_W) $(srcdir)` -I$(top_builddir)/inc
++AM_CPPFLAGS = -I`$(CYGPATH_W) $(srcdir)/..` ${COINUTILS_CFLAGS} ${OSIVOLLIB_CFLAGS} -I. -I`$(CYGPATH_W) $(srcdir)` -I$(top_builddir)/inc
  
  ########################################################################
  #                Headers that need to be installed                     #
@@ -142,7 +142,7 @@ diff -urN Vol-1.5.4-orig/Vol/src/OsiVol/Makefile.am Vol-1.5.4/Vol/src/OsiVol/Mak
  includecoin_HEADERS = OsiVolSolverInterface.hpp
 diff -urN Vol-1.5.4-orig/Vol/src/OsiVol/osi-vol.pc.in Vol-1.5.4/Vol/src/OsiVol/osi-vol.pc.in
 --- Vol-1.5.4-orig/Vol/src/OsiVol/osi-vol.pc.in	2019-02-23 05:42:17.000000000 +0800
-+++ Vol-1.5.4/Vol/src/OsiVol/osi-vol.pc.in	2025-03-29 12:32:38.790806800 +0800
++++ Vol-1.5.4/Vol/src/OsiVol/osi-vol.pc.in	2026-01-13 18:22:59.283520200 +0800
 @@ -1,12 +1,12 @@
  prefix=@prefix@
  exec_prefix=@exec_prefix@
@@ -161,7 +161,7 @@ diff -urN Vol-1.5.4-orig/Vol/src/OsiVol/osi-vol.pc.in Vol-1.5.4/Vol/src/OsiVol/o
 +Requires: vol @OSIVOLLIB_PCFILES@
 diff -urN Vol-1.5.4-orig/Vol/src/OsiVol/osi-vol-uninstalled.pc.in Vol-1.5.4/Vol/src/OsiVol/osi-vol-uninstalled.pc.in
 --- Vol-1.5.4-orig/Vol/src/OsiVol/osi-vol-uninstalled.pc.in	2019-02-23 05:42:17.000000000 +0800
-+++ Vol-1.5.4/Vol/src/OsiVol/osi-vol-uninstalled.pc.in	2025-03-28 13:41:13.370700800 +0800
++++ Vol-1.5.4/Vol/src/OsiVol/osi-vol-uninstalled.pc.in	2026-01-13 18:22:59.284517600 +0800
 @@ -5,6 +5,6 @@
  Description: COIN-OR Open Solver Interface for Vol
  URL: https://projects.coin-or.org/Osi
@@ -173,7 +173,7 @@ diff -urN Vol-1.5.4-orig/Vol/src/OsiVol/osi-vol-uninstalled.pc.in Vol-1.5.4/Vol/
 +Requires: vol @OSIVOLLIB_PCFILES@
 diff -urN Vol-1.5.4-orig/Vol/vol.pc.in Vol-1.5.4/Vol/vol.pc.in
 --- Vol-1.5.4-orig/Vol/vol.pc.in	2019-02-23 05:42:17.000000000 +0800
-+++ Vol-1.5.4/Vol/vol.pc.in	2025-03-29 12:31:15.852710000 +0800
++++ Vol-1.5.4/Vol/vol.pc.in	2026-01-13 18:22:59.285514500 +0800
 @@ -1,12 +1,12 @@
  prefix=@prefix@
  exec_prefix=@exec_prefix@
@@ -192,7 +192,7 @@ diff -urN Vol-1.5.4-orig/Vol/vol.pc.in Vol-1.5.4/Vol/vol.pc.in
 +Requires: @VOLLIB_PCFILES@
 diff -urN Vol-1.5.4-orig/Vol/vol-uninstalled.pc.in Vol-1.5.4/Vol/vol-uninstalled.pc.in
 --- Vol-1.5.4-orig/Vol/vol-uninstalled.pc.in	2019-02-23 05:42:17.000000000 +0800
-+++ Vol-1.5.4/Vol/vol-uninstalled.pc.in	2025-03-28 13:41:13.382930800 +0800
++++ Vol-1.5.4/Vol/vol-uninstalled.pc.in	2026-01-13 18:22:59.286511900 +0800
 @@ -5,6 +5,6 @@
  Description: Volume Algorithm
  URL: https://projects.coin-or.org/Vol

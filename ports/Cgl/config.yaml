@@ -5,9 +5,16 @@ recursive: false
 depth: 1
 dependencies:
   required:
-    - CoinUtils
-    - mspcrt
-    - Data-Sample
-    - Osi
+    - bzip2
     - Clp
+    - CoinUtils
+    - Data-Sample
+    - DyLP
+    - lapack
+    - Osi
+    - ThirdParty-ASL
+    - ThirdParty-Glpk
+    - ThirdParty-Mumps
+    - Vol
+    - zlib
 script: build.sh

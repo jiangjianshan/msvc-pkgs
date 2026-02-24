@@ -13,15 +13,10 @@ rem   PKG_VER       - Version of the current library being built.
 rem   ROOT_DIR      - Root directory of the msvc-pkg project.
 rem   SRC_DIR       - Source code directory of the current library.
 rem   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-rem                   This path is where the built artifacts for *this specific library* will be installed.
-rem                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-rem                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 rem   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-rem   _PREFIX       - **Default installation path prefix** for all built libraries.
-rem                   This is the root directory where libraries are installed **unless overridden**
-rem                   by a specific `PREFIX` setting for an individual library.
 rem
 rem   For each direct dependency `{Dependency}` of the current library:
+rem     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 rem     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 rem     {Dependency}_VER - Version of the dependency `{Dependency}`.
 
@@ -43,7 +38,6 @@ exit /b 0
 
 :build_stage
 echo "Building %PKG_NAME% %PKG_VER%"
-if not defined PCRE2_PREFIX set PCRE2_PREFIX=%_PREFIX%
 cd "%BUILD_DIR%"
 cargo rustc --release --features pcre2 -- -L %PCRE2_PREFIX%\lib -l pcre2-8 || exit 1
 exit /b 0

@@ -1,9 +1,5 @@
 name: SPIRV-Tools
-version: main
-url: https://github.com/KhronosGroup/SPIRV-Tools.git
-recursive: false
-depth: 1
-dependencies:
-  required:
-    - mspcrt
+version: 2026.1
+url: https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/v2026.1.tar.gz
+sha256: 35dc16cf2dc64be5b6bbbe86d210e6f4a82b070cffd751605a3365cd8bce2d7e
 script: build.bat

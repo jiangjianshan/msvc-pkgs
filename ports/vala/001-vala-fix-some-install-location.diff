@@ -1,0 +1,39 @@
+diff -urN vala-0.56.18-orig/configure.ac vala-0.56.18/configure.ac
+--- vala-0.56.18-orig/configure.ac	2025-03-03 03:20:11.000000000 +0800
++++ vala-0.56.18/configure.ac	2026-02-18 21:59:50.499423700 +0800
+@@ -32,9 +32,9 @@
+ program_transform_name="s,\$\$,${PACKAGE_SUFFIX},"
+ 
+ AC_SUBST(pkgdatadir, [${datadir}/vala${PACKAGE_SUFFIX}])
+-AC_SUBST(pkglibdir, [${libdir}/vala${PACKAGE_SUFFIX}])
++AC_SUBST(pkglibdir, [${libdir}])
+ AC_SUBST(pkgdocdatadir, [${datadir}/valadoc${PACKAGE_SUFFIX}])
+-AC_SUBST(pkgdoclibdir, [${libdir}/valadoc${PACKAGE_SUFFIX}])
++AC_SUBST(pkgdoclibdir, [${libdir}])
+ 
+ # Checks for programs.
+ AC_PROG_CC
+diff -urN vala-0.56.18-orig/gobject-introspection/Makefile.am vala-0.56.18/gobject-introspection/Makefile.am
+--- vala-0.56.18-orig/gobject-introspection/Makefile.am	2025-03-03 03:20:11.000000000 +0800
++++ vala-0.56.18/gobject-introspection/Makefile.am	2026-02-18 22:17:04.374700100 +0800
+@@ -25,7 +25,7 @@
+ 	$(GMODULE_LIBS) \
+ 	$(NULL)
+ 
+-pkglibexecdir = $(libdir)/vala@PACKAGE_SUFFIX@
++pkglibexecdir = $(bindir)
+ pkglibexec_PROGRAMS = gen-introspect
+ 
+ BUILT_SOURCES = scannerparser.h
+diff -urN vala-0.56.18-orig/libvala.pc.in vala-0.56.18/libvala.pc.in
+--- vala-0.56.18-orig/libvala.pc.in	2025-03-03 03:20:11.000000000 +0800
++++ vala-0.56.18/libvala.pc.in	2026-02-18 22:15:17.631422100 +0800
+@@ -10,7 +10,7 @@
+ vapidir=@datadir@/vala@PACKAGE_SUFFIX@/vapi
+ 
+ vapigen=@bindir@/vapigen@PACKAGE_SUFFIX@
+-gen_introspect=@pkglibdir@/gen-introspect@PACKAGE_SUFFIX@
++gen_introspect=@bindir@/gen-introspect@PACKAGE_SUFFIX@
+ vala_gen_introspect=@bindir@/vala-gen-introspect@PACKAGE_SUFFIX@
+ 
+ Name: Vala

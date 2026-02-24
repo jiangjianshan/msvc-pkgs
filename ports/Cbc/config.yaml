@@ -5,14 +5,17 @@ recursive: false
 depth: 1
 dependencies:
   required:
+    - bzip2
+    - Cgl
+    - Clp
     - CoinUtils
-    - ThirdParty-ASL
-    - ThirdParty-Glpk
-    - ThirdParty-Mumps
     - Data-Sample
     - Data-Netlib
     - Data-miplib3
+    - lapack
     - Osi
-    - Clp
-    - Cgl
+    - ThirdParty-ASL
+    - ThirdParty-Glpk
+    - ThirdParty-Mumps
+    - zlib
 script: build.sh

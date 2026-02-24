@@ -1,0 +1,8 @@
+name: Vulkan-Tools
+version: 1.4.342
+url: https://github.com/KhronosGroup/Vulkan-Tools/archive/refs/tags/v1.4.342.tar.gz
+sha256: ee9f209e5c8c695c7f2fd35021bebbeb9418698a2a362a18a7eedc6110bdc1c6
+dependencies:
+  required:
+    - Vulkan-Headers
+script: build.bat

@@ -1,0 +1,36 @@
+diff -urN mesa-25.3.4-orig/src/egl/meson.build mesa-25.3.4/src/egl/meson.build
+--- mesa-25.3.4-orig/src/egl/meson.build	2026-01-24 05:13:52.000000000 +0800
++++ mesa-25.3.4/src/egl/meson.build	2026-01-30 21:32:08.338515300 +0800
+@@ -217,7 +217,7 @@
+   install : true,
+   version : egl_lib_version,
+   soversion : egl_lib_soversion,
+-  name_prefix : host_machine.system() == 'windows' ? 'lib' : [],  # always use lib, but avoid warnings on !windows
++  name_prefix : host_machine.system() == 'windows' ? '' : [],
+   vs_module_defs : egl_def
+ )
+ 
+diff -urN mesa-25.3.4-orig/src/mesa/glapi/es1api/meson.build mesa-25.3.4/src/mesa/glapi/es1api/meson.build
+--- mesa-25.3.4-orig/src/mesa/glapi/es1api/meson.build	2026-01-24 05:13:52.000000000 +0800
++++ mesa-25.3.4/src/mesa/glapi/es1api/meson.build	2026-01-30 21:32:36.556007800 +0800
+@@ -39,7 +39,7 @@
+   soversion : host_machine.system() == 'windows' ? '' : '1',
+   version : '1.1.0',
+   darwin_versions  : '3.0.0',
+-  name_prefix : host_machine.system() == 'windows' ? 'lib' : [],  # always use lib, but avoid warnings on !windows
++  name_prefix : host_machine.system() == 'windows' ? '' : [],
+   install : true,
+ )
+ 
+diff -urN mesa-25.3.4-orig/src/mesa/glapi/es2api/meson.build mesa-25.3.4/src/mesa/glapi/es2api/meson.build
+--- mesa-25.3.4-orig/src/mesa/glapi/es2api/meson.build	2026-01-24 05:13:52.000000000 +0800
++++ mesa-25.3.4/src/mesa/glapi/es2api/meson.build	2026-01-30 21:32:33.715752900 +0800
+@@ -39,7 +39,7 @@
+   soversion : host_machine.system() == 'windows' ? '' : '2',
+   version : '2.0.0',
+   darwin_versions : '3.0.0',
+-  name_prefix : host_machine.system() == 'windows' ? 'lib' : [],  # always use lib, but avoid warnings on !windows
++  name_prefix : host_machine.system() == 'windows' ? '' : [],
+   install : true,
+ )
+ 

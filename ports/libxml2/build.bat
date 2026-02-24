@@ -13,15 +13,10 @@ rem   PKG_VER       - Version of the current library being built.
 rem   ROOT_DIR      - Root directory of the msvc-pkg project.
 rem   SRC_DIR       - Source code directory of the current library.
 rem   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-rem                   This path is where the built artifacts for *this specific library* will be installed.
-rem                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-rem                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 rem   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-rem   _PREFIX       - **Default installation path prefix** for all built libraries.
-rem                   This is the root directory where libraries are installed **unless overridden**
-rem                   by a specific `PREFIX` setting for an individual library.
 rem
 rem   For each direct dependency `{Dependency}` of the current library:
+rem     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 rem     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 rem     {Dependency}_VER - Version of the dependency `{Dependency}`.
 
@@ -51,6 +46,7 @@ cmake -G "Ninja"                                                               ^
   -DCMAKE_C_COMPILER=cl                                                        ^
   -DCMAKE_C_FLAGS="%C_OPTS% %C_DEFS%"                                          ^
   -DCMAKE_INSTALL_PREFIX="%PREFIX%"                                            ^
+  -DLIBXML2_PYTHON_INSTALL_DIR="%PREFIX:\=/%/lib/site-packages"                ^
   -DLIBXML2_WITH_AUTOMATA=ON                                                   ^
   -DLIBXML2_WITH_C14N=ON                                                       ^
   -DLIBXML2_WITH_CATALOG=ON                                                    ^
@@ -69,7 +65,7 @@ cmake -G "Ninja"                                                               ^
   -DLIBXML2_WITH_PATTERN=ON                                                    ^
   -DLIBXML2_WITH_PROGRAMS=ON                                                   ^
   -DLIBXML2_WITH_PUSH=ON                                                       ^
-  -DLIBXML2_WITH_PYTHON=OFF                                                    ^
+  -DLIBXML2_WITH_PYTHON=ON                                                     ^
   -DLIBXML2_WITH_READER=ON                                                     ^
   -DLIBXML2_WITH_REGEXPS=ON                                                    ^
   -DLIBXML2_WITH_SAX1=ON                                                       ^
@@ -103,9 +99,6 @@ cd "%BUILD_DIR%" && ninja install || exit 1
 if not exist "%PREFIX%\lib\xml2.lib" (
   mklink "%PREFIX%\lib\xml2.lib" "%PREFIX%\lib\libxml2.lib"
 )
-pushd "%PREFIX%\lib\pkgconfig"
-sed -e "s#\([A-Za-z]\):/\([^/]\)#/\L\1\E/\2#g" -i libxml-2.0.pc
-popd
 exit /b 0
 
 :end

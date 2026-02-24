@@ -5,11 +5,11 @@ recursive: true
 depth: 1
 dependencies:
   required:
-    - nasm
     - abseil-cpp
     - c-ares
+    - nasm
+    - openssl
     - protobuf
     - re2
     - zlib
-    - mspcrt
 script: build.bat

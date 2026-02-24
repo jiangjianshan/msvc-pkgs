@@ -1,6 +1,6 @@
 diff -urN superlu-6.0.1-orig/CMakeLists.txt superlu-6.0.1/CMakeLists.txt
 --- superlu-6.0.1-orig/CMakeLists.txt	2023-08-06 04:18:45.000000000 +0800
-+++ superlu-6.0.1/CMakeLists.txt	2024-11-18 17:36:29.930164500 +0800
++++ superlu-6.0.1/CMakeLists.txt	2026-01-25 17:14:50.553668600 +0800
 @@ -85,10 +85,18 @@
  #---- For shared library
  if (BUILD_SHARED_LIBS)
@@ -27,13 +27,13 @@ diff -urN superlu-6.0.1-orig/CMakeLists.txt superlu-6.0.1/CMakeLists.txt
    set(BLAS_LIB blas)
    if (BUILD_SHARED_LIBS)  # export to be referenced by downstream makefile
 +    if (MSVC)
-       set(BLAS_LIB_EXPORT ${CMAKE_INSTALL_PREFIX}/CBLAS/libblas.so)
++      set(BLAS_LIB_EXPORT ${CMAKE_INSTALL_PREFIX}/CBLAS/blas.lib)
 +    else()
-+      set(BLAS_LIB_EXPORT ${CMAKE_INSTALL_PREFIX}/CBLAS/blas.dll)
+       set(BLAS_LIB_EXPORT ${CMAKE_INSTALL_PREFIX}/CBLAS/libblas.so)
 +    endif()
    else()
 +    if (MSVC)
-+      set(BLAS_LIB_EXPORT ${CMAKE_INSTALL_PREFIX}/CBLAS/blas.dll)
++      set(BLAS_LIB_EXPORT ${CMAKE_INSTALL_PREFIX}/CBLAS/libblas.lib)
 +    else()
        set(BLAS_LIB_EXPORT ${CMAKE_INSTALL_PREFIX}/CBLAS/libblas.a)
 +    endif()
@@ -42,7 +42,7 @@ diff -urN superlu-6.0.1-orig/CMakeLists.txt superlu-6.0.1/CMakeLists.txt
  
 diff -urN superlu-6.0.1-orig/make.inc.in superlu-6.0.1/make.inc.in
 --- superlu-6.0.1-orig/make.inc.in	2023-08-06 04:18:45.000000000 +0800
-+++ superlu-6.0.1/make.inc.in	2024-11-18 17:33:17.777807800 +0800
++++ superlu-6.0.1/make.inc.in	2026-01-12 15:42:23.880556300 +0800
 @@ -20,7 +20,7 @@
  SuperLUroot	= ${CMAKE_INSTALL_PREFIX}
  SUPERLULIB   	= $(SuperLUroot)/SRC/${PROJECT_NAME_LIB_EXPORT}

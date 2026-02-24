@@ -4,8 +4,14 @@ url: https://github.com/Netflix/vmaf/archive/refs/tags/v2.3.1.tar.gz
 sha256: 8d60b1ddab043ada25ff11ced821da6e0c37fd7730dd81c24f1fc12be7293ef2
 dependencies:
   required:
-    - pkg-config
+    - icu4c
+    - libiconv
+    - libxml2
     - llvm-project
     - mspcrt
     - nasm
+    - pkg-config
+    - xz
+    - zlib
+    - zstd
 script: build.bat

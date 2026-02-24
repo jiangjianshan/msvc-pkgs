@@ -1,0 +1,48 @@
+name: gtk4
+version: 4.21.5
+url: https://gitlab.gnome.org/GNOME/gtk/-/archive/4.21.5/gtk-4.21.5.tar.bz2
+sha256: 93639fba6ead9b050bdf3d636b23b349248a2862e7b2802f0baf3d9c565b1943
+dependencies:
+  required:
+    - brotli
+    - bzip2
+    - cairo
+    - dav1d
+    - DirectX-Headers
+    - expat
+    - fontconfig
+    - freeglut
+    - freetype
+    - fribidi
+    - gettext
+    - gdk-pixbuf
+    - glib
+    - gobject-introspection
+    - graphene
+    - gstreamer
+    - harfbuzz
+    - icu4c
+    - libdatrie
+    - libdeflate
+    - libepoxy
+    - libffi
+    - libiconv
+    - libjpeg-turbo
+    - libpng
+    - librsvg
+    - libsass
+    - libthai
+    - libtiff
+    - libwebp
+    - libxml2
+    - mesa
+    - mspcrt
+    - pango
+    - pcre2
+    - pixman
+    - pkg-config
+    - sassc
+    - xz
+    - zlib
+    - zstd
+script: build.bat

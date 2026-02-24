@@ -9,6 +9,7 @@ dependencies:
     - libjpeg-turbo
     - libiconv
     - libxml2
+    - mspcrt
     - rawspeed
     - XMP-Toolkit-SDK
     - zlib

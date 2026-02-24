@@ -1,13 +1,22 @@
 name: gst-editing-services
-version: 1.26.8
-url: https://gstreamer.freedesktop.org/src/gstreamer-editing-services/gst-editing-services-1.26.8.tar.xz
-sha256: c391c33350ee56ec1f3a83b71f114348ef4669953e67b55f86e466c7dbd0f000
+version: 1.27.90
+url: https://gstreamer.freedesktop.org/src/gst-editing-services/gst-editing-services-1.27.90.tar.xz
+sha256: 3f1a2aa7d41afeb14daa4a98688182de157feb54b158087dc4b60bc9d0034a37
 dependencies:
   required:
-    - pkg-config
-    - mspcrt
     - gettext
     - glib
     - gobject-introspection
     - gstreamer
+    - gst-plugins-base
+    - icu4c
+    - libffi
+    - libiconv
+    - libxml2
+    - mspcrt
+    - pcre2
+    - pkg-config
+    - winflexbison
+    - xz
+    - zlib
 script: build.bat

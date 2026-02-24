@@ -1,0 +1,19 @@
+name: atkmm
+version: 2.36.3
+url: https://download.gnome.org/sources/atkmm/2.36/atkmm-2.36.3.tar.xz
+sha256: 6ec264eaa0c4de0adb7202c600170bde9a7fbe4d466bfbe940eaf7faaa6c5974
+dependencies:
+  required:
+    - atk
+    - doxygen
+    - gettext
+    - glib
+    - glibmm
+    - libffi
+    - libiconv
+    - libsigc++
+    - mm-common
+    - mspcrt
+    - pcre2
+    - pkg-config
+script: build.bat

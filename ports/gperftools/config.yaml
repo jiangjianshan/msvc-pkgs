@@ -4,6 +4,12 @@ url: https://github.com/gperftools/gperftools/archive/refs/tags/gperftools-2.17.
 sha256: 885dbbf1f25a922de0cdc78b0703c3ab93c43850e1d2f7c889e41be7c824c53d
 dependencies:
   required:
-    - mspcrt
+    - icu4c
+    - libiconv
+    - libxml2
     - llvm-project
+    - mspcrt
+    - xz
+    - zlib
+    - zstd
 script: build.sh

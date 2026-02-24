@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Remove duplicate string with filter
+#
+file="$(cygpath -u "$1")"
+
+awk -v filter="${2:-}" '{
+    match($0, /^[[:space:]]*/)
+    leading_spaces = substr($0, RSTART, RLENGTH)
+    content = substr($0, RLENGTH + 1)
+    if (content == "") {
+        print $0
+        next
+    }
+    delete seen
+    result = ""
+    n = split(content, words, /[[:space:]]+/)
+    for (i = 1; i <= n; i++) {
+        if (words[i] != "") {
+            if (filter == "" || index(words[i], filter) > 0) {
+                if (!seen[words[i]]++) {
+                    result = (result == "" ? words[i] : result " " words[i])
+                }
+            } else {
+                result = (result == "" ? words[i] : result " " words[i])
+            }
+        }
+    }
+    print leading_spaces result
+}' "$file" > "${file}-t" && mv "${file}-t" "$file"

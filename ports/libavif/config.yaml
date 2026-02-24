@@ -6,8 +6,11 @@ dependencies:
   required:
     - dav1d
     - libaom
-    - libyuv
     - libgav1
+    - libjpeg-turbo
+    - libpng
+    - libyuv
     - rav1e
     - SVT-AV1
+    - zlib
 script: build.bat

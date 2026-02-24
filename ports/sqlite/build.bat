@@ -19,7 +19,7 @@ call "%ROOT_DIR%\compiler.bat" %ARCH%
 set BUILD_DIR=%SRC_DIR%
 set C_OPTS=-diagnostics:column -experimental:c11atomics -fp:precise -MD -nologo -openmp:llvm -utf-8
 set C_DEFS=-DWIN32 -D_WIN32_WINNT=_WIN32_WINNT_WIN10 -D_CRT_DECLARE_NONSTDC_NAMES -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS -D_USE_MATH_DEFINES -DNOMINMAX
-set CL=%C_OPTS% %C_DEFS%
+set CL=-MP %C_OPTS% %C_DEFS%
 
 call :clean_stage
 call :build_stage
@@ -35,9 +35,6 @@ exit /b 0
 :build_stage
 echo "Building %PKG_NAME% %PKG_VER%"
 cd "%BUILD_DIR%"
-if not defined ICU4C_PREFIX set ICU4C_PREFIX=%_PREFIX%
-if not defined TCL_PREFIX set TCL_PREFIX=%_PREFIX%
-if not defined ZLIB_PREFIX set ZLIB_PREFIX=%_PREFIX%
 nmake /K /f Makefile.msc TCLDIR=!TCL_PREFIX!                                   ^
   CCOPTS="%C_OPTS% %C_DEFS%"                                                   ^
   BUILD_ZLIB=0                                                                 ^

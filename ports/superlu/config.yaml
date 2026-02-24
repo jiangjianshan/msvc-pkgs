@@ -6,4 +6,5 @@ dependencies:
   required:
     - GKlib
     - METIS
+    - mspcrt
 script: build.bat

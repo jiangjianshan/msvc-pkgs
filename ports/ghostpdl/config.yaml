@@ -1,0 +1,20 @@
+name: ghostpdl
+version: 10.06.0
+url: https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10060/ghostpdl-10.06.0.tar.gz
+sha256: 80dd50abf5970f49140ca7c0c19475cc2707437f89e8a825e670ba101003f1d8
+dependencies:
+  required:
+    - brotli
+    - fontconfig
+    - freetype
+    - gtk3
+    - libiconv
+    - libidn2
+    - libpaper
+    - libpng
+    - libtiff
+    - mspcrt
+    - openjpeg
+    - tesseract
+    - zlib
+script: build.bat

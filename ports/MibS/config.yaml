@@ -5,17 +5,23 @@ sha256: 54c43d5ac3bf179922b50516205621aca480a41840758ae8f480848334ab3d19
 dependencies:
   required:
     - BuildTools
-    - ThirdParty-Glpk
-    - ThirdParty-Mumps
-    - Data-Sample
-    - Data-miplib3
-    - CoinUtils
-    - Osi
-    - Clp
+    - bzip2
+    - Cbc
     - Cgl
+    - Clp
+    - CoinUtils
     - CHiPPS-ALPS
     - CHiPPS-BiCePS
     - CHiPPS-BLIS
+    - Data-Sample
+    - Data-miplib3
+    - DyLP
+    - lapack
+    - Osi
     - SYMPHONY
-    - Cbc
+    - ThirdParty-ASL
+    - ThirdParty-Glpk
+    - ThirdParty-Mumps
+    - Vol
+    - zlib
 script: build.sh

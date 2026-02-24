@@ -2,5 +2,4 @@ name: win32yank
 version: 0.1.1
 url: https://github.com/equalsraf/win32yank/archive/refs/tags/v0.1.1.tar.gz
 sha256: 194126f114e3736e6e03bbf69ace9a2125ecfa2fc69bd1760d42fdd6adea1b37
-dependencies:
 script: build.bat

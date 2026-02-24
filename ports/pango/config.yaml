@@ -1,11 +1,15 @@
 name: pango
-version: 1.56.1
-url: https://download.gnome.org/sources/pango/1.56/pango-1.56.1.tar.xz
-sha256: 426be66460c98b8378573e7f6b0b2ab450f6bb6d2ec7cecc33ae81178f246480
+version: 1.56.4
+url: https://download.gnome.org/sources/pango/1.56/pango-1.56.4.tar.xz
+sha256: 17065e2fcc5f5a5bdbffc884c956bfc7c451a96e8c4fb2f8ad837c6413cb5a01
 dependencies:
   required:
-    - pkg-config
+    - brotli
+    - bzip2
     - cairo
+    - expat
+    - gettext
+    - gi-docgen
     - gobject-introspection
     - glib
     - fontconfig
@@ -13,6 +17,14 @@ dependencies:
     - fribidi
     - harfbuzz
     - help2man
+    - libdatrie
+    - libffi
+    - libiconv
     - libpng
     - libthai
+    - mspcrt
+    - pcre2
+    - pixman
+    - pkg-config
+    - zlib
 script: build.bat

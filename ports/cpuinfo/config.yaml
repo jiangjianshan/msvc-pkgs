@@ -5,5 +5,5 @@ recursive: false
 depth: 1
 dependencies:
   required:
-    - mspcrt
+    - benchmark
 script: build.bat

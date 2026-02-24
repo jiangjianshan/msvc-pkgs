@@ -6,5 +6,4 @@ dependencies:
   required:
     - lapack
     - ThirdParty-Metis
-    - mspcrt
 script: build.sh

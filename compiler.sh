@@ -433,13 +433,19 @@ config_misc()
         INCLUDE=$(prepend_path "${p}"'\include' "${INCLUDE:-}" ";")
       fi
       if [ -d "${_p}/lib" ]; then
+        LD_LIBRARY_PATH=$(prepend_path "$(cygpath -u "${_p}/lib")" "${LD_LIBRARY_PATH:-}" ":")
         LIB=$(prepend_path "${p}"'\lib' "${LIB:-}" ";")
+        LIBRARY_PATH=$(prepend_path "$(cygpath -u "${_p}/lib")" "${LIBRARY_PATH:-}" ":")
+        LTDL_LIBRARY_PATH=$(prepend_path "$(cygpath -u "${_p}/lib")" "${LTDL_LIBRARY_PATH:-}" ":")
       fi
       if [ -d "${_p}/lib/cmake" ]; then
         CMAKE_PREFIX_PATH=$(prepend_path "${p}"'\lib\cmake' "${CMAKE_PREFIX_PATH:-}" ";")
       fi
       if [ -d "${_p}/lib/pkgconfig" ]; then
         PKG_CONFIG_PATH=$(prepend_path "$(cygpath -u "${_p}/lib/pkgconfig")" "${PKG_CONFIG_PATH:-}" ":")
+      fi
+      if [ -d "${_p}/share/pkgconfig" ]; then
+        PKG_CONFIG_PATH=$(prepend_path "$(cygpath -u "${_p}/share/pkgconfig")" "${PKG_CONFIG_PATH:-}" ":")
       fi
     fi
   done

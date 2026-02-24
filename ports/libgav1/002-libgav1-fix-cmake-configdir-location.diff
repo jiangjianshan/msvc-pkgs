@@ -1,0 +1,12 @@
+diff -urN libgav1-0.19.0-orig/cmake/libgav1_install.cmake libgav1-0.19.0/cmake/libgav1_install.cmake
+--- libgav1-0.19.0-orig/cmake/libgav1_install.cmake	2026-01-14 14:21:46.176282800 +0800
++++ libgav1-0.19.0/cmake/libgav1_install.cmake	2026-01-14 14:21:11.700224100 +0800
+@@ -42,7 +42,7 @@
+                    NEWLINE_STYLE UNIX)
+     install(
+       FILES "${libgav1_build}/libgav1-config.cmake"
+-      DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/cmake")
++      DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/cmake/libgav1")
+ 
+     install(
+       FILES ${libgav1_api_includes}

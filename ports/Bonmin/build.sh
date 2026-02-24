@@ -12,18 +12,12 @@
 #   ROOT_DIR      - Root directory of the msvc-pkg project.
 #   SRC_DIR       - Source code directory of the current library.
 #   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-#                   This path is where the built artifacts for *this specific library* will be installed.
-#                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-#                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 #   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-#   _PREFIX       - **Default installation path prefix** for all built libraries.
-#                   This is the root directory where libraries are installed **unless overridden**
-#                   by a specific `PREFIX` setting for an individual library.
 #
 #   For each direct dependency `{Dependency}` of the current library:
+#     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 #     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 #     {Dependency}_VER - Version of the dependency `{Dependency}`.
-
 . $ROOT_DIR/compiler.sh $ARCH
 BUILD_DIR=$SRC_DIR/build${ARCH//x/}
 C_OPTS='-diagnostics:column -experimental:c11atomics -fp:precise -MD -nologo -openmp:llvm -utf-8'
@@ -40,18 +34,30 @@ prepare_stage()
 {
   echo "Preparing $PKG_NAME $PKG_VER"
   cd "$SRC_DIR"
-  # XXX: libtool don't have options can set the naming style of static and
-  #      shared library. Here is only a workaround.
-  sed                                                                                                \
-    -e 's|old_library=$libname\.$libext|old_library=lib$libname.$libext|g'                           \
-    -e 's|$output_objdir/$libname\.$libext|$output_objdir/lib$libname.$libext|g'                     \
-    -i ltmain.sh
-
-  sed                                                                                                \
-    -e "s|libname_spec='lib\$name'|libname_spec='\$name'|g"                                          \
-    -e 's|\.dll\.lib|.lib|g'                                                                         \
-    -i configure
-  chmod +x configure
+  # TODO:
+  # 1. it is better to fix the code of configure.ac on github directly
+  sed                                                                          \
+    -e 's/\[osi-clp\]/[osi-clp osi coinutils cgl cbc]/g'                       \
+    -e 's/\[ipoptamplinterface\]/[ipoptamplinterface osi coinutils cgl cbc]/g' \
+    -i configure.ac
+  sed                                                                          \
+    -e 's|/coin$|/coin-or|g'                                                   \
+    -i bonmin.pc.in
+  pushd src/CbcBonmin || exit 1
+  sed                                                                          \
+    -e 's|/coin$|/coin-or|g'                                                   \
+    -i bonminamplinterface.pc.in
+  popd
+  cd "$ROOT_DIR/buildtrees/sources/BuildTools"
+  sed                                                                          \
+    -e '/patch -p1 < BuildTools\/libtool-icl.patch/d'                          \
+    -e 's/automake || exit 1/automake --add-missing || exit 1/g'               \
+    -i run_autotools
+  export COIN_AUTOTOOLS_DIR=/usr
+  WANT_AUTOCONF='2.72' WANT_AUTOMAKE='1.17' ./run_autotools $SRC_DIR
+  cd "$SRC_DIR"
+  rm -rfv Bcp/autom4te.cache
+  find . -name "*~" -type f -print -exec rm -rfv {} \;
 }
 
 configure_stage()
@@ -74,31 +80,31 @@ configure_stage()
   # 3. Taken care of the logic of func_resolve_sysroot() and func_replace_sysroot()
   #    in ltmain.sh, otherwise may have '-L=*' in the filed of 'dependency_libs' in
   #    *.la. So don't set --with-sysroot if --libdir has been set
-  AR="$ROOT_DIR/wrappers/ar-lib lib -nologo"                                                       \
-  CC="cl"                                                                                          \
-  CFLAGS="$C_OPTS"                                                                                 \
-  CPP="cl -E"                                                                                      \
-  CPPFLAGS="$C_DEFS -I$(cygpath -u "${THIRDPARTY_PREFIX:-$_PREFIX}")/include/coin-or/glpk"         \
-  CXX="cl"                                                                                         \
-  CXXFLAGS="-EHsc $C_OPTS"                                                                         \
-  CXXCPP="cl -E"                                                                                   \
-  DLLTOOL="link -verbose -dll"                                                                     \
-  LD="link -nologo"                                                                                \
-  NM="dumpbin -nologo -symbols"                                                                    \
-  PKG_CONFIG="/usr/bin/pkg-config"                                                                 \
-  RANLIB=":"                                                                                       \
-  RC="$ROOT_DIR/wrappers/windres-rc rc -nologo"                                                    \
-  STRIP=":"                                                                                        \
-  WINDRES="$ROOT_DIR/wrappers/windres-rc rc -nologo"                                               \
-  ../configure --build="$(sh ../config.guess)"                                                     \
-    --host="$HOST_TRIPLET"                                                                         \
-    --prefix="$PREFIX"                                                                             \
-    --bindir="$PREFIX/bin"                                                                         \
-    --includedir="$PREFIX/include"                                                                 \
-    --libdir="$PREFIX/lib"                                                                         \
-    --enable-msvc                                                                                  \
-    --enable-shared                                                                                \
-    lt_cv_deplibs_check_method=${lt_cv_deplibs_check_method='pass_all'}                            \
+  AR="$ROOT_DIR/wrappers/ar-lib lib -nologo"                                   \
+  CC="cl"                                                                      \
+  CFLAGS="$C_OPTS"                                                             \
+  CPP="cl -E"                                                                  \
+  CPPFLAGS="$C_DEFS"                                                           \
+  CXX="cl"                                                                     \
+  CXXFLAGS="-EHsc $C_OPTS"                                                     \
+  CXXCPP="cl -E"                                                               \
+  DLLTOOL="link -verbose -dll"                                                 \
+  LD="link -nologo"                                                            \
+  NM="dumpbin -nologo -symbols"                                                \
+  PKG_CONFIG="/usr/bin/pkg-config"                                             \
+  RANLIB=":"                                                                   \
+  RC="$ROOT_DIR/wrappers/windres-rc rc -nologo"                                \
+  STRIP=":"                                                                    \
+  WINDRES="$ROOT_DIR/wrappers/windres-rc rc -nologo"                           \
+  ../configure --build="$(sh ../config.guess)"                                 \
+    --host="$HOST_TRIPLET"                                                     \
+    --prefix="$PREFIX"                                                         \
+    --bindir="$PREFIX/bin"                                                     \
+    --includedir="$PREFIX/include"                                             \
+    --libdir="$PREFIX/lib"                                                     \
+    --enable-msvc                                                              \
+    --enable-shared                                                            \
+    lt_cv_deplibs_check_method=${lt_cv_deplibs_check_method='pass_all'}        \
     gt_cv_locale_zh_CN=none || exit 1
 }
 

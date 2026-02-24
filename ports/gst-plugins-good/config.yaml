@@ -1,14 +1,36 @@
 name: gst-plugins-good
-version: 1.27.2
-url: https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.27.2.tar.xz
-sha256: 4f047416d71b102998db4cc513925cb317d87a3409d0ffae3ba218765b0f1ce5
+version: 1.27.90
+url: https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.27.90.tar.xz
+sha256: 6ae5c65ef3a00f0ca34d1bb8011be42240a590f8cd04690ad28d6fa331bc5f44
 dependencies:
   required:
-    - pkg-config
-    - mspcrt
+    - bzip2
+    - expat
+    - flac
+    - fontconfig
+    - freetype
     - gettext
+    - gdk-pixbuf
     - glib
     - gobject-introspection
     - gstreamer
     - gst-plugins-base
+    - gtk3
+    - libffi
+    - libiconv
+    - libjpeg-turbo
+    - libogg
+    - libpng
+    - libRaw
+    - libvpx
+    - mspcrt
+    - nasm
+    - nettle
+    - openssl
+    - orc
+    - pcre2
+    - pixman
+    - pkg-config
+    - speex
+    - zlib
 script: build.bat

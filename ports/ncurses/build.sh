@@ -12,18 +12,12 @@
 #   ROOT_DIR      - Root directory of the msvc-pkg project.
 #   SRC_DIR       - Source code directory of the current library.
 #   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-#                   This path is where the built artifacts for *this specific library* will be installed.
-#                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-#                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 #   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-#   _PREFIX       - **Default installation path prefix** for all built libraries.
-#                   This is the root directory where libraries are installed **unless overridden**
-#                   by a specific `PREFIX` setting for an individual library.
 #
 #   For each direct dependency `{Dependency}` of the current library:
+#     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 #     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 #     {Dependency}_VER - Version of the dependency `{Dependency}`.
-
 . $ROOT_DIR/compiler.sh $ARCH
 BUILD_DIR=$SRC_DIR/build${ARCH//x/}
 C_OPTS='-diagnostics:column -experimental:c11atomics -fp:precise -MD -nologo -openmp:llvm -utf-8'
@@ -277,42 +271,71 @@ install_stage()
 {
   echo "Installing $PKG_NAME $PKG_VER"
   cd "$BUILD_DIR" && make install || exit 1
+  # ncursesw -> ncurses
   if [[ -d "$PREFIX/include/ncurses" ]]; then
     rm -f "$PREFIX/include/ncurses"
   fi
   ln -sv "$PREFIX/include/ncursesw" "$PREFIX/include/ncurses"
+  # libncursesw.lib -> libncurses.lib
   if [[ -f "$PREFIX/lib/libncurses.lib" ]]; then
     rm -f "$PREFIX/lib/libncurses.lib"
   fi
   ln -sv "$PREFIX/lib/libncursesw.lib" "$PREFIX/lib/libncurses.lib"
+  # ncursesw.lib -> ncurses.lib
   if [[ -f "$PREFIX/lib/ncurses.lib" ]]; then
     rm -f "$PREFIX/lib/ncurses.lib"
   fi
   ln -sv "$PREFIX/lib/ncursesw.lib" "$PREFIX/lib/ncurses.lib"
+  # libformw.lib -> libform.lib
   if [[ -f "$PREFIX/lib/libform.lib" ]]; then
     rm -f "$PREFIX/lib/libform.lib"
   fi
   ln -sv "$PREFIX/lib/libformw.lib" "$PREFIX/lib/libform.lib"
+  # formw.lib -> form.lib
   if [[ -f "$PREFIX/lib/form.lib" ]]; then
     rm -f "$PREFIX/lib/form.lib"
   fi
   ln -sv "$PREFIX/lib/formw.lib" "$PREFIX/lib/form.lib"
+  # libmenuw.lib -> libmenu.lib
   if [[ -f "$PREFIX/lib/libmenu.lib" ]]; then
     rm -f "$PREFIX/lib/libmenu.lib"
   fi
   ln -sv "$PREFIX/lib/libmenuw.lib" "$PREFIX/lib/libmenu.lib"
+  # menuw.lib -> menu.lib
   if [[ -f "$PREFIX/lib/menu.lib" ]]; then
     rm -f "$PREFIX/lib/menu.lib"
   fi
   ln -sv "$PREFIX/lib/menuw.lib" "$PREFIX/lib/menu.lib"
+  # libpanelw.lib -> libpanel.lib
   if [[ -f "$PREFIX/lib/libpanel.lib" ]]; then
     rm -f "$PREFIX/lib/libpanel.lib"
   fi
   ln -sv "$PREFIX/lib/libpanelw.lib" "$PREFIX/lib/libpanel.lib"
+  # panelw.lib -> panel.lib
   if [[ -f "$PREFIX/lib/panel.lib" ]]; then
     rm -f "$PREFIX/lib/panel.lib"
   fi
   ln -sv "$PREFIX/lib/panelw.lib" "$PREFIX/lib/panel.lib"
+  # formw.pc -> form.pc
+  if [[ -f "$PREFIX/lib/pkgconfig/form.pc" ]]; then
+    rm -f "$PREFIX/lib/pkgconfig/form.pc"
+  fi
+  ln -sv "$PREFIX/lib/pkgconfig/formw.pc" "$PREFIX/lib/pkgconfig/form.pc"
+  # menuw.pc -> menu.pc
+  if [[ -f "$PREFIX/lib/pkgconfig/menu.pc" ]]; then
+    rm -f "$PREFIX/lib/pkgconfig/menu.pc"
+  fi
+  ln -sv "$PREFIX/lib/pkgconfig/menuw.pc" "$PREFIX/lib/pkgconfig/menu.pc"
+  # ncursesw.pc -> ncurses.pc
+  if [[ -f "$PREFIX/lib/pkgconfig/ncurses.pc" ]]; then
+    rm -f "$PREFIX/lib/pkgconfig/ncurses.pc"
+  fi
+  ln -sv "$PREFIX/lib/pkgconfig/ncursesw.pc" "$PREFIX/lib/pkgconfig/ncurses.pc"
+  # panelw.pc -> panel.pc
+  if [[ -f "$PREFIX/lib/pkgconfig/panel.pc" ]]; then
+    rm -f "$PREFIX/lib/pkgconfig/panel.pc"
+  fi
+  ln -sv "$PREFIX/lib/pkgconfig/panelw.pc" "$PREFIX/lib/pkgconfig/panel.pc"
 }
 
 clean_stage

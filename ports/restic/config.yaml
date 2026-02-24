@@ -2,5 +2,4 @@ name: restic
 version: 0.18.1
 url: https://github.com/restic/restic/archive/refs/tags/v0.18.1.tar.gz
 sha256: 4b8e2b6cb20e9707e14b9b9d92ddb6f2e913523754e1f123e2e6f3321e67f7ca
-dependencies:
 script: build.bat

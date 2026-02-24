@@ -4,19 +4,43 @@ url: https://gitlab.com/graphviz/graphviz/-/archive/12.2.0/graphviz-12.2.0.tar.b
 sha256: 56090fb1e5986919d6099041871744d84231d632f8649ea07028052a5487d444
 dependencies:
   required:
-    - mspcrt
-    - pkg-config
-    - pango
+    - brotli
+    - bzip2
     - cairo
+    - dav1d
+    - expat
+    - gdk-pixbuf
+    - gettext
     - glib
+    - gtk3
     - fontconfig
+    - freeglut
+    - freetype
+    - fribidi
     - harfbuzz
+    - icu4c
+    - libdatrie
+    - libepoxy
+    - libffi
+    - libiconv
     - libpng
     - libjpeg-turbo
+    - libthai
+    - libtiff
+    - libwebp
+    - libxml2
+    - lua
+    - mspcrt
+    - openjpeg
+    - pango
+    - pcre2
     - pixman
+    - pkg-config
     - tcl
+    - winflexbison
+    - xz
     - zlib
-    - freeglut
   optional:
     - libgd
+    - librsvg
 script: build.bat

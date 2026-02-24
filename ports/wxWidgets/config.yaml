@@ -6,6 +6,5 @@ depth: 1
 dependencies:
   required:
     - freeglut
-    - mspcrt
     - xz
 script: build.bat

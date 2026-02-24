@@ -13,15 +13,10 @@ rem   PKG_VER       - Version of the current library being built.
 rem   ROOT_DIR      - Root directory of the msvc-pkg project.
 rem   SRC_DIR       - Source code directory of the current library.
 rem   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-rem                   This path is where the built artifacts for *this specific library* will be installed.
-rem                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-rem                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 rem   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-rem   _PREFIX       - **Default installation path prefix** for all built libraries.
-rem                   This is the root directory where libraries are installed **unless overridden**
-rem                   by a specific `PREFIX` setting for an individual library.
 rem
 rem   For each direct dependency `{Dependency}` of the current library:
+rem     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 rem     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 rem     {Dependency}_VER - Version of the dependency `{Dependency}`.
 
@@ -50,30 +45,30 @@ set base_source=mpfuna.f90 mpfunb.f90 mpfunc.f90 mpfund.f90 mpfune.f90         ^
   mpfunf.f90 mpfung1.f90 mpfunh1.f90 mpmodule.f90 mpmask13.f90 second.f90
 set base_objs=%base_source:.f90=.obj%
 @echo on
-ifort %F_OPTS% -c %base_source% || exit 1
-ifort %F_OPTS% -heap-arrays -exe:testmpfun.exe testmpfun.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpolysolve.exe tpolysolve.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpslq1.exe tpslq1.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpslqm1.exe tpslqm1.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpslqm2.exe tpslqm2.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpslqm3.exe tpslqm3.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpphix3.exe tpphix3.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tquad.exe tquad.f90 !base_objs! || exit 1
+ifx %F_OPTS% -c %base_source% || exit 1
+ifx %F_OPTS% -heap-arrays -exe:testmpfun.exe testmpfun.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpolysolve.exe tpolysolve.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpslq1.exe tpslq1.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpslqm1.exe tpslqm1.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpslqm2.exe tpslqm2.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpslqm3.exe tpslqm3.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpphix3.exe tpphix3.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tquad.exe tquad.f90 !base_objs! || exit 1
 @echo off
 cd "%BUILD_DIR%\fortran-var2"
 set base_source=mpfuna.f90 mpfunb.f90 mpfunc.f90 mpfund.f90 mpfune.f90         ^
   mpfunf.f90 mpfung2.f90 mpfunh2.f90 mpmodule.f90 mpmask13.f90 second.f90
 set base_objs=%base_source:.f90=.obj%
 @echo on
-ifort %F_OPTS% -c %base_source% || exit 1
-ifort %F_OPTS% -heap-arrays -exe:testmpfun.exe testmpfun.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpolysolve.exe tpolysolve.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpslq1.exe tpslq1.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpslqm1.exe tpslqm1.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpslqm2.exe tpslqm2.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpslqm3.exe tpslqm3.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tpphix3.exe tpphix3.f90 !base_objs! || exit 1
-ifort %F_OPTS% -heap-arrays -exe:tquad.exe tquad.f90 !base_objs! || exit 1
+ifx %F_OPTS% -c %base_source% || exit 1
+ifx %F_OPTS% -heap-arrays -exe:testmpfun.exe testmpfun.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpolysolve.exe tpolysolve.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpslq1.exe tpslq1.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpslqm1.exe tpslqm1.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpslqm2.exe tpslqm2.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpslqm3.exe tpslqm3.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tpphix3.exe tpphix3.f90 !base_objs! || exit 1
+ifx %F_OPTS% -heap-arrays -exe:tquad.exe tquad.f90 !base_objs! || exit 1
 @echo off
 exit /b 0
 

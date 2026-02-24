@@ -9,5 +9,4 @@ dependencies:
     - perl
     - zlib
     - zstd
-    - mspcrt
 script: build.bat

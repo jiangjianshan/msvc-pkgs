@@ -4,5 +4,5 @@ url: https://github.com/intel/igsc/archive/refs/tags/V1.0.0.tar.gz
 sha256: 5a82246aeeef50218acb11d318f467b00bad3be1938f727b15f5e871b25f01df
 dependencies:
   required:
-    - mspcrt
+    - metee
 script: build.bat

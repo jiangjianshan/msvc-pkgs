@@ -5,6 +5,7 @@ sha256: c01376bce0379d4ea4bc2ec5d5cbddaa49e2f06f88242619ab8c059e21adf233
 dependencies:
   required:
     - giflib
+    - libdeflate
     - libjpeg-turbo
     - libpng
     - libtiff
@@ -12,6 +13,6 @@ dependencies:
     - jbigkit
     - openjpeg
     - xz
-    - zlib-ng
+    - zlib
     - zstd
 script: build.bat

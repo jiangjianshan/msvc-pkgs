@@ -1,10 +1,10 @@
 name: dav1d
-version: master
-url: https://code.videolan.org/videolan/dav1d.git
-recursive: false
-depth: 1
+version: 1.5.3
+url: https://downloads.videolan.org/pub/videolan/dav1d/1.5.3/dav1d-1.5.3.tar.xz
+sha256: 732010aa5ef461fa93355ed2c6c5fedb48ddc4b74e697eaabe8907eaeb943011
 dependencies:
   required:
-    - pkg-config
     - mspcrt
+    - nasm
+    - pkg-config
 script: build.bat

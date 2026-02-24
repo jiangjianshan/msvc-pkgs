@@ -5,5 +5,4 @@ sha256: 7649020621cb26325e1fb5c8742590d92fb48ce5c259b502faf7d9fb5dabb160
 dependencies:
   required:
     - libatomic_ops
-    - mspcrt
 script: build.bat

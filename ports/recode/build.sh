@@ -12,18 +12,12 @@
 #   ROOT_DIR      - Root directory of the msvc-pkg project.
 #   SRC_DIR       - Source code directory of the current library.
 #   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-#                   This path is where the built artifacts for *this specific library* will be installed.
-#                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-#                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 #   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-#   _PREFIX       - **Default installation path prefix** for all built libraries.
-#                   This is the root directory where libraries are installed **unless overridden**
-#                   by a specific `PREFIX` setting for an individual library.
 #
 #   For each direct dependency `{Dependency}` of the current library:
+#     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 #     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 #     {Dependency}_VER - Version of the dependency `{Dependency}`.
-
 . $ROOT_DIR/compiler.sh $ARCH
 BUILD_DIR=$SRC_DIR/build${ARCH//x/}
 C_OPTS='-diagnostics:column -experimental:c11atomics -fp:precise -MD -nologo -openmp:llvm -utf-8'
@@ -39,7 +33,9 @@ prepare_stage()
 {
   echo "Preparing $PKG_NAME $PKG_VER"
   cd "$SRC_DIR"
-  WANT_AUTOCONF='2.72' WANT_AUTOMAKE='1.16' ./bootstrap --skip-po
+  if [ ! -f configure ] || [ configure.ac -nt configure ]; then
+    WANT_AUTOCONF='2.72' WANT_AUTOMAKE='1.16' ./bootstrap --skip-po
+  fi
   rm -rfv autom4te.cache
   find . -name "*~" -type f -print -exec rm -rfv {} \;
 }

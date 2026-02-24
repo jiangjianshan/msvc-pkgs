@@ -2,5 +2,4 @@ name: observer-ptr-lite
 version: 0.4.0
 url: https://github.com/nonstd-lite/observer-ptr-lite/archive/refs/tags/v0.4.0.tar.gz
 sha256: 812eafbdaccfb44ffd2536692b668cd1f16228e8d7609de56b60320c8c57cc67
-dependencies:
 script: build.bat

@@ -6,7 +6,6 @@ depth: 1
 dependencies:
   required:
     - bzip2
-    - mspcrt
     - Data-Sample
     - Data-Netlib
     - lapack

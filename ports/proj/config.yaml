@@ -4,9 +4,15 @@ url: https://download.osgeo.org/proj/proj-9.4.0.tar.gz
 sha256: 3643b19b1622fe6b2e3113bdb623969f5117984b39f173b4e3fb19a8833bd216
 dependencies:
   required:
-    - sqlite
     - curl
     - googletest
+    - icu4c
+    - libdeflate
+    - libjpeg-turbo
+    - libwebp
     - libtiff
-    - mspcrt
+    - sqlite
+    - xz
+    - zlib
+    - zstd
 script: build.bat

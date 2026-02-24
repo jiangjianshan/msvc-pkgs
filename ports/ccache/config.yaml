@@ -10,7 +10,6 @@ dependencies:
     - fmt
     - hiredis
     - minitrace
-    - mspcrt
     - span-lite
     - tl-expected
     - xxHash

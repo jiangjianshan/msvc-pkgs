@@ -1,21 +1,41 @@
 name: gtkmm
-version: 4.18.0
-url: https://download.gnome.org/sources/gtkmm/4.18/gtkmm-4.18.0.tar.xz
-sha256: 2ee31c15479fc4d8e958b03c8b5fbbc8e17bc122c2a2f544497b4e05619e33ec
+version: 4.20.0
+url: https://download.gnome.org/sources/gtkmm/4.20/gtkmm-4.20.0.tar.xz
+sha256: daad9bf9b70f90975f91781fc7a656c923a91374261f576c883cd3aebd59c833
 dependencies:
   required:
-    - pkg-config
-    - gtk
+    - brotli
+    - bzip2
     - cairo
     - cairomm
     - doxygen
+    - expat
+    - fontconfig
     - freetype
+    - fribidi
+    - gdk-pixbuf
+    - gettext
+    - glib
     - glibmm
+    - graphene
+    - gstreamer
+    - gtk4
+    - harfbuzz
+    - libffi
+    - libiconv
+    - libpng
+    - libtiff
+    - libjpeg-turbo
     - libxslt
     - libsigc++
     - mm-common
     - pango
     - pangomm
+    - pcre2
     - perl
+    - pixman
+    - mspcrt
+    - pkg-config
     - Vulkan-Loader
+    - zlib
 script: build.bat

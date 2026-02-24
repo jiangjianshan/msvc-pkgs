@@ -5,10 +5,10 @@ recursive: false
 depth: 1
 dependencies:
   required:
-    - lua
-    - libsodium
     - gettext
-    - gettext:x86
+    - libiconv
+    - libsodium
+    - lua
     - perl
     - ruby
     - tcl

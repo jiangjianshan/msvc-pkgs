@@ -1,0 +1,27 @@
+diff -urN tesseract-5.5.1-orig/CMakeLists.txt tesseract-5.5.1/CMakeLists.txt
+--- tesseract-5.5.1-orig/CMakeLists.txt	2025-05-25 17:48:40.000000000 +0800
++++ tesseract-5.5.1/CMakeLists.txt	2026-02-18 20:20:05.657634300 +0800
+@@ -366,13 +366,10 @@
+ 
+ if(CYGWIN)
+   add_definitions(-D__CYGWIN__)
+-elseif(UNIX)
+-  if(NOT ANDROID)
+-    set(LIB_pthread pthread)
+-  endif()
+ elseif(WIN32)
+   set(LIB_Ws2_32 Ws2_32)
+ endif()
++set(LIB_pthread pthread)
+ 
+ add_definitions("-DCMAKE_BUILD")
+ 
+@@ -889,7 +886,7 @@
+   target_link_libraries(tesseract ${TIFF_LIBRARIES})
+ endif()
+ 
+-if(OPENMP_BUILD AND UNIX)
++if(OPENMP_BUILD)
+   target_link_libraries(tesseract pthread)
+ endif()
+ 

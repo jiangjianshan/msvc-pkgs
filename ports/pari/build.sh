@@ -12,18 +12,12 @@
 #   ROOT_DIR      - Root directory of the msvc-pkg project.
 #   SRC_DIR       - Source code directory of the current library.
 #   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-#                   This path is where the built artifacts for *this specific library* will be installed.
-#                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-#                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 #   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-#   _PREFIX       - **Default installation path prefix** for all built libraries.
-#                   This is the root directory where libraries are installed **unless overridden**
-#                   by a specific `PREFIX` setting for an individual library.
 #
 #   For each direct dependency `{Dependency}` of the current library:
+#     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 #     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 #     {Dependency}_VER - Version of the dependency `{Dependency}`.
-
 . $ROOT_DIR/compiler.sh $ARCH
 BUILD_DIR=$SRC_DIR/build${ARCH//x/}
 C_OPTS='-diagnostics:column -experimental:c11atomics -fp:precise -MD -nologo -openmp:llvm -utf-8 -arch:SSE2'
@@ -87,11 +81,11 @@ configure_stage()
     --builddir="$BUILD_DIR"                                                              \
     --graphic=win32                                                                      \
     --time=ftime                                                                         \
-    --with-runtime-perl="$(cygpath -u "${PERL_PREFIX:-$_PREFIX}/bin/perl.exe")"          \
-    --with-readline="$(cygpath -u "${READLINE_PREFIX:-$_PREFIX}")"                       \
-    --with-ncurses-lib="$(cygpath -u "${NCURSES_PREFIX:-$_PREFIX}/lib")"                 \
-    --with-gmp="$(cygpath -u "${GMP_PREFIX:-$_PREFIX}")"                                 \
-    --with-fltk="$(cygpath -u "${FLTK_PREFIX:-$_PREFIX}")"
+    --with-runtime-perl="$(cygpath -u "$PERL_PREFIX")/bin/perl.exe"                      \
+    --with-readline="$(cygpath -u "$READLINE_PREFIX")"                                   \
+    --with-ncurses-lib="$(cygpath -u "$NCURSES_PREFIX")/lib"                             \
+    --with-gmp="$(cygpath -u "$GMP_PREFIX")"                                             \
+    --with-fltk="$(cygpath -u "$FLTK_PREFIX")"
 }
 
 build_stage()

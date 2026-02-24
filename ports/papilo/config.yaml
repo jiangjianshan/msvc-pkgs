@@ -7,5 +7,4 @@ dependencies:
     - boost
     - gmp
     - oneTBB
-    - mspcrt
 script: build.bat

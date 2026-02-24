@@ -2,16 +2,16 @@ name: libgav1
 version: 0.19.0
 url: https://github.com/mirrorstogooglesource/libgav1/archive/refs/tags/v0.19.0.tar.gz
 sha256: 156a831e236560508a591b386fee8b7b77c73278ea0609cbc7fb4256b244debf
-extras:
+components:
   - name: abseil-cpp
     version: 20250512.1
     url: https://github.com/abseil/abseil-cpp/archive/refs/tags/20250512.1.tar.gz
     sha256: 9b7a064305e9fd94d124ffa6cc358592eb42b5da588fb4e07d09254aa40086db
     target: third_party/abseil-cpp
-    check: "if exist \"third_party\\abseil-cpp\" (exit 0) else (exit 1)"
+    check: |
+      if exist "third_party\abseil-cpp" (exit 0) else (exit 1)
 dependencies:
   required:
     - abseil-cpp
     - googletest
-    - mspcrt
 script: build.bat

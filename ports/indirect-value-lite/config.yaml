@@ -2,5 +2,4 @@ name: indirect-value-lite
 version: 0.1.0
 url: https://github.com/nonstd-lite/indirect-value-lite/archive/refs/tags/v0.1.0.tar.gz
 sha256: ea1e54aae1619a0996315b49679b82583f0cd17f2395fd50ae26848d293b5023
-dependencies:
 script: build.bat

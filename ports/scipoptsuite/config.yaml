@@ -4,13 +4,20 @@ url: https://www.scipopt.org/download/release/scipoptsuite-9.2.1.tgz
 sha256: 41b71a57af773403e9a6724f78c37d8396ac4b6b270a9bbf3716d67f1af12edf
 dependencies:
   required:
-    - pkg-config
     - boost
+    - bzip2
+    - Clp
     - gmp
+    - gsl
     - Ipopt
-    - oneTBB
-    - readline
-    - winflexbison
+    - lapack
+    - mpfr
     - mspcrt
+    - oneTBB
+    - pcre2
+    - pkg-config
+    - readline
+    - ThirdParty-Mumps
+    - winflexbison
     - zlib
 script: build.bat

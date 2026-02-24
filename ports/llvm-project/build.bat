@@ -13,15 +13,10 @@ rem   PKG_VER       - Version of the current library being built.
 rem   ROOT_DIR      - Root directory of the msvc-pkg project.
 rem   SRC_DIR       - Source code directory of the current library.
 rem   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-rem                   This path is where the built artifacts for *this specific library* will be installed.
-rem                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-rem                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 rem   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-rem   _PREFIX       - **Default installation path prefix** for all built libraries.
-rem                   This is the root directory where libraries are installed **unless overridden**
-rem                   by a specific `PREFIX` setting for an individual library.
 rem
 rem   For each direct dependency `{Dependency}` of the current library:
+rem     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 rem     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 rem     {Dependency}_VER - Version of the dependency `{Dependency}`.
 
@@ -93,10 +88,10 @@ cmake -G "Ninja"                                                                
   -DLLVM_LINK_LLVM_DYLIB=ON                                                                        ^
   -DLLVM_LIT_ARGS=-v                                                                               ^
   -DLLVM_OPTIMIZED_TABLEGEN=ON                                                                     ^
-  -DLLVM_TARGETS_TO_BUILD="AArch64;ARM;X86;RISCV;NVPTX;AMDGPU"                                     ^
+  -DLLVM_TARGETS_TO_BUILD=all                                                                      ^
   -DCLANG_ENABLE_BOOTSTRAP=ON                                                                      ^
-  -DCLANG_BOOTSTRAP_PASSTHROUGH="CMAKE_BUILD_TYPE;CMAKE_POLICY_DEFAULT_CMP0074;CMAKE_POLICY_DEFAULT_CMP0116;CLANG_DEFAULT_CXX_STDLIB;CLANG_DEFAULT_LINKER;CLANG_DEFAULT_OBJCOPY;CLANG_DEFAULT_OPENMP_RUNTIME;CLANG_DEFAULT_RTLIB;CLANG_ENABLE_OBJC_REWRITER;LIBCXX_USE_COMPILER_RT;LLVM_BUILD_DOCS;LLVM_BUILD_EXAMPLES;LLVM_BUILD_LLVM_C_DYLIB;LLVM_BUILD_LLVM_DYLIB;LLVM_BUILD_TESTS;LLVM_ENABLE_RTTI;LLVM_INCLUDE_DOCS;LLVM_INCLUDE_EXAMPLES;LLVM_INCLUDE_TESTS;LLVM_INSTALL_UTILS;LLVM_LINK_LLVM_DYLIB;LLVM_LIT_ARGS;LLVM_OPTIMIZED_TABLEGEN;LLVM_TARGETS_TO_BUILD" ^
-  -DBOOTSTRAP_LLVM_ENABLE_PROJECTS="bolt;clang;clang-tools-extra;lld;lldb;polly;mlir;flang"        ^
+  -DCLANG_BOOTSTRAP_PASSTHROUGH="CMAKE_BUILD_TYPE;CMAKE_INSTALL_LIBDIR;CMAKE_POLICY_DEFAULT_CMP0074;CMAKE_POLICY_DEFAULT_CMP0116;CLANG_DEFAULT_CXX_STDLIB;CLANG_DEFAULT_LINKER;CLANG_DEFAULT_OBJCOPY;CLANG_DEFAULT_OPENMP_RUNTIME;CLANG_DEFAULT_RTLIB;CLANG_ENABLE_OBJC_REWRITER;LIBCXX_USE_COMPILER_RT;LLVM_BUILD_DOCS;LLVM_BUILD_EXAMPLES;LLVM_BUILD_LLVM_C_DYLIB;LLVM_BUILD_LLVM_DYLIB;LLVM_BUILD_TESTS;LLVM_ENABLE_RTTI;LLVM_INCLUDE_DOCS;LLVM_INCLUDE_EXAMPLES;LLVM_INCLUDE_TESTS;LLVM_INSTALL_UTILS;LLVM_LINK_LLVM_DYLIB;LLVM_LIT_ARGS;LLVM_OPTIMIZED_TABLEGEN;LLVM_TARGETS_TO_BUILD" ^
+  -DBOOTSTRAP_LLVM_ENABLE_PROJECTS="bolt;clang;clang-tools-extra;lld;polly;mlir;flang"             ^
   -DBOOTSTRAP_LLVM_ENABLE_RUNTIMES="compiler-rt;openmp;libcxx;libclc;flang-rt"                     ^
   -DBOOTSTRAP_LLVM_ENABLE_LLD=ON                                                                   ^
   ../llvm || exit 1

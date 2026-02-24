@@ -1,0 +1,16 @@
+diff -urN librsvg-2.60.2-orig/gdk-pixbuf-loader/meson.build librsvg-2.60.2/gdk-pixbuf-loader/meson.build
+--- librsvg-2.60.2-orig/gdk-pixbuf-loader/meson.build	2026-01-28 07:39:33.000000000 +0800
++++ librsvg-2.60.2/gdk-pixbuf-loader/meson.build	2026-01-29 10:40:25.480194800 +0800
+@@ -42,9 +42,9 @@
+ 
+ pixbufloader_svg_install_args = [
+   '--gdk-pixbuf-moduledir',
+-  pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_moduledir', pkgconfig_define: ['prefix', prefix]),
+-  pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_query_loaders', pkgconfig_define: ['prefix', prefix]),
+-  pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_cache_file', pkgconfig_define: ['prefix', prefix])
++  pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_moduledir'),
++  pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_query_loaders'),
++  pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_cache_file')
+ ]
+ 
+ # Tell people to run gdk-pixbuf-query-loaders manually for cross builds

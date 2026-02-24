@@ -6,4 +6,5 @@ depth: 1
 dependencies:
   required:
     - gettext
+    - libiconv
 script: build.bat

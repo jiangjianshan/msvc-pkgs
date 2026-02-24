@@ -12,19 +12,13 @@
 #   ROOT_DIR      - Root directory of the msvc-pkg project.
 #   SRC_DIR       - Source code directory of the current library.
 #   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-#                   This path is where the built artifacts for *this specific library* will be installed.
-#                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-#                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 #   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-#   _PREFIX       - **Default installation path prefix** for all built libraries.
-#                   This is the root directory where libraries are installed **unless overridden**
-#                   by a specific `PREFIX` setting for an individual library.
 #
 #   For each direct dependency `{Dependency}` of the current library:
+#     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 #     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 #     {Dependency}_VER - Version of the dependency `{Dependency}`.
-
-. $ROOT_DIR/compiler.sh $ARCH
+. $ROOT_DIR/compiler.sh $ARCH oneapi
 BUILD_DIR=$SRC_DIR/Bcp/build${ARCH//x/}
 C_OPTS='-diagnostics:column -experimental:c11atomics -fp:precise -MD -nologo -openmp:llvm -utf-8'
 C_DEFS='-DWIN32 -D_WIN32_WINNT=_WIN32_WINNT_WIN10 -D_CRT_DECLARE_NONSTDC_NAMES -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS -D_USE_MATH_DEFINES -DNOMINMAX'
@@ -80,8 +74,12 @@ configure_stage()
   CXXFLAGS="-EHsc $C_OPTS"                                                     \
   CXXCPP="cl -E"                                                               \
   DLLTOOL="link -verbose -dll"                                                 \
+  F77="ifx"                                                                    \
+  FFLAGS="-f77rtl $F_OPTS"                                                     \
   LD="link -nologo"                                                            \
-  LIBS="-lpcrt"                                                                \
+  MPICC="$ROOT_DIR/wrappers/mpicl"                                             \
+  MPICXX="$ROOT_DIR/wrappers/mpicl"                                            \
+  MPIF77="$ROOT_DIR/wrappers/mpiifx"                                           \
   NM="dumpbin -nologo -symbols"                                                \
   PKG_CONFIG="/usr/bin/pkg-config"                                             \
   RANLIB=":"                                                                   \
@@ -96,6 +94,7 @@ configure_stage()
     --libdir="$PREFIX/lib"                                                     \
     --enable-msvc                                                              \
     --enable-shared                                                            \
+    ac_cv_prog_f77_v="-verbose"                                                \
     lt_cv_deplibs_check_method=${lt_cv_deplibs_check_method='pass_all'}        \
     gt_cv_locale_zh_CN=none || exit 1
 }

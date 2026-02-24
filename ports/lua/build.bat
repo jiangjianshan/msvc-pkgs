@@ -13,15 +13,10 @@ rem   PKG_VER       - Version of the current library being built.
 rem   ROOT_DIR      - Root directory of the msvc-pkg project.
 rem   SRC_DIR       - Source code directory of the current library.
 rem   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-rem                   This path is where the built artifacts for *this specific library* will be installed.
-rem                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-rem                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 rem   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-rem   _PREFIX       - **Default installation path prefix** for all built libraries.
-rem                   This is the root directory where libraries are installed **unless overridden**
-rem                   by a specific `PREFIX` setting for an individual library.
 rem
 rem   For each direct dependency `{Dependency}` of the current library:
+rem     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 rem     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 rem     {Dependency}_VER - Version of the dependency `{Dependency}`.
 
@@ -64,16 +59,16 @@ if not exist "%PREFIX%\bin" mkdir "%PREFIX%\bin"
 if not exist "%PREFIX%\include" mkdir "%PREFIX%\include"
 if not exist "%PREFIX%\lib" mkdir "%PREFIX%\lib"
 cd "%BUILD_DIR%" && (
-  echo F | xcopy /F /Y lua%pkg_ver_trim%.lib lua.lib
-  xcopy /F /Y /I *.exe %PREFIX%\bin
-  xcopy /F /Y /I *.lib %PREFIX%\lib
-  xcopy /F /Y /I *.dll %PREFIX%\bin
-  xcopy /F /Y /I lauxlib.h %PREFIX%\include
-  xcopy /F /Y /I lua*.h %PREFIX%\include
-  xcopy /F /Y /I lua*.hpp %PREFIX%\include
+  echo F | xcopy /Y /F lua%pkg_ver_trim%.lib lua.lib
+  xcopy /Y /F /I *.exe %PREFIX%\bin
+  xcopy /Y /F /I *.lib %PREFIX%\lib
+  xcopy /Y /F /I *.dll %PREFIX%\bin
+  xcopy /Y /F /I lauxlib.h %PREFIX%\include
+  xcopy /Y /F /I lua*.h %PREFIX%\include
+  xcopy /Y /F /I lua*.hpp %PREFIX%\include
 )
-echo "Generating lua.pc to %PREFIX%\lib\pkgconfig"
-set PC_FILE=%PREFIX%\lib\pkgconfig\lua.pc
+echo "Generating lua%pkg_ver_trim%.pc to %PREFIX%\lib\pkgconfig"
+set PC_FILE=%PREFIX%\lib\pkgconfig\lua%pkg_ver_trim%.pc
 if not exist "%PREFIX%\lib\pkgconfig" mkdir "%PREFIX%\lib\pkgconfig"
 where cygpath >nul 2>&1
 if "%errorlevel%" neq "0" (

@@ -2,5 +2,4 @@ name: variant-lite
 version: 3.0.0
 url: https://github.com/nonstd-lite/variant-lite/archive/refs/tags/v3.0.0.tar.gz
 sha256: bd596550369f33ef9455566822f5a4d52852a63a33d3d70ac1fbb529b78abc7b
-dependencies:
 script: build.bat

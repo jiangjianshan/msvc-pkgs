@@ -6,11 +6,19 @@ dependencies:
   required:
     - doxygen
     - gcem
+    - gettext
     - glib
-    - libxslt
+    - icu4c
+    - libiconv
     - libsndfile
+    - libxml2
+    - libxslt
     - llvm-project
     - mspcrt
+    - pcre
     - readline
     - SDL3
+    - xz
+    - zlib
+    - zstd
 script: build.bat

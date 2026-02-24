@@ -4,12 +4,18 @@ url: https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.15.0.t
 sha256: 63a0658d0e06e0fa886106452b58ef04f21f58202ea02a94c39de0d3335d7c0e
 dependencies:
   required:
-    - pkg-config
-    - mspcrt
+    - brotli
+    - bzip2
+    - expat
+    - freetype
     - gettext
     - glib:required
     - gperf
-    - freetype
-    - expat
     - harfbuzz:required
+    - libiconv
+    - libpng
+    - mspcrt
+    - pcre2
+    - pkg-config
+    - zlib
 script: build.bat

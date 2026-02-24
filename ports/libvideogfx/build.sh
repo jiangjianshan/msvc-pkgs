@@ -39,6 +39,14 @@ prepare_stage()
 {
   echo "Preparing $PKG_NAME $PKG_VER"
   cd "$SRC_DIR"
+  if [[ -f "libvideogfx/libvideogfx.hh" ]]; then
+    rm -fv "libvideogfx/libvideogfx.hh"
+  fi
+  pushd examples
+  sed                                                                                                \
+    -e 's| -lstdc++||g'                                                                              \
+    -i Makefile.in
+  popd
   # XXX: libtool don't have options can set the naming style of static and
   #      shared library. Here is only a workaround.
   sed                                                                                                \

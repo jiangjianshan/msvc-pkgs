@@ -45,26 +45,69 @@ set GI_SCANNER_DISABLE_CACHE=1
 set GOPATH=%~dp0go
 set GOBIN=%GOPATH%\bin
 
-rem Verify Python installation exists and is accessible
-python --version >nul 2>&1 || (
-    echo Python not found. Please install from: https://www.python.org/downloads/
-    pause
-    exit /b 1
-)
-
-rem Check for required Python packages using importlib
-rem Installs missing dependencies automatically if not present
-python -c "import importlib.util as i;exit(any(not i.find_spec(m) for m in('pygments','yaml','rich','requests','zstandard')))" >nul 2>&1 || (
-    echo Installing required Python packages...
-    python -m pip install --upgrade pip Pygments PyYAML rich requests zstandard
-)
-
 rem  https://docs.python.org/3/using/windows.html#removing-the-max-path-limitation
 reg query HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled >nul 2>&1 || (
   reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t reg_DWORD /d 1
 )
 
+set missing=
+rem Verify Python installation exists and is accessible
+python --version >nul 2>&1 || (
+    echo Python not found. You can download it from 'https://www.python.org/downloads/'
+    set missing=1
+)
+
+rem Verify Git installation exists and is accessible
+git --version >nul 2>&1 || (
+    echo Git not found. You can download it from 'https://git-scm.com/install/windows/'
+    set missing=1
+)
+
+if "%missing%" equ "1" (
+    pause
+    exit 0
+)
+
+rem Get root location of Git for windows
+set GIT_ROOT=
+for /f "delims=" %%a in ('where git') do for %%b in ("%%~dpa..") do set "GIT_ROOT=%%~fb"
+
+rem Verify meson installation exists and is accessible
+meson --version >nul 2>&1 || (
+    python -m pip install meson
+)
+
+rem Check for required Python packages using importlib
+rem Installs missing dependencies automatically if not present
+python -c "import importlib.util as i;exit(any(not i.find_spec(m) for m in('pygments','yaml','rich','requests')))" >nul 2>&1 || (
+    echo Installing required Python packages...
+    python -m pip install --upgrade pip Pygments PyYAML rich requests
+)
+
+for %%i in ("%~dp0.") do set "ROOT_DIR=%%~fi"
 set "ORIG_PATH=%PATH%"
-set "PATH=%~dp0installed\x64-windows\bin;%~dp0installed\x86-windows\bin;%PATH%"
+rem IMPORTANT: PATH Order for Git Bash Environment
+rem
+rem When using Git for Windows, the order of Git-related paths in the %PATH% environment variable
+rem is critical for proper system detection in configure scripts.
+rem
+rem The path "C:\Program Files\Git\bin" must appear BEFORE "C:\Program Files\Git\usr\bin" in %PATH%.
+rem
+rem Reason:
+rem - "C:\Program Files\Git\bin\bash.exe" is the main Git Bash entry point that properly sets
+rem   the %MSYSTEM% environment variable to "MINGW64"
+rem - "C:\Program Files\Git\usr\bin\bash.exe" is a plain bash shell that does NOT set %MSYSTEM%
+rem
+rem If the paths are in the wrong order, bash scripts executed via bash.exe will have:
+rem - %MSYSTEM% unset or incorrectly set
+rem - config.guess and config.sub will fail to detect the correct build type
+rem - Result: "checking build system type... x86_64-pc-msys" (incorrect)
+rem - Instead of: "checking build system type... x86_64-pc-mingw64" (correct)
+rem
+rem This path ordering ensures that configure scripts and build tools correctly identify
+rem the system as MinGW64 rather than MSYS, which is essential for proper library linking
+rem and compilation flags.
+rem
+set "PATH=%PATH%;%ROOT_DIR%\bin;%GIT_ROOT%\bin;%GIT_ROOT%\usr\bin"
 python main.py %*
 set "PATH=%ORIG_PATH%"

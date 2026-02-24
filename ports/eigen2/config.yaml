@@ -1,0 +1,21 @@
+name: eigen2
+version: 2.0.17
+url: https://gitlab.com/libeigen/eigen/-/archive/2.0.17/eigen-2.0.17.tar.bz2
+sha256: 47571e7724925b05c6bba453c27da1b358e88e4d8028e353e2cfab0ea945430e
+dependencies:
+  required:
+    - ADOL-C
+    - boost
+    - fftw
+    - sparsehash
+    - gmp
+    - gsl
+    - METIS
+    - mpfr
+    - mpreal
+    - mspcrt
+    - pkg-config
+    - SuiteSparse
+    - superlu
+    - sparsehash
+script: build.bat

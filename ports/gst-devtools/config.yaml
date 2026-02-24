@@ -1,13 +1,35 @@
 name: gst-devtools
-version: 1.27.2
-url: https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-1.27.2.tar.xz
-sha256: e4e708351b450beadd45aa9f00c5b23585eca73c2bbfa10ed1c8ef36de60ab57
+version: 1.27.90
+url: https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-1.27.90.tar.xz
+sha256: bbee0e23d1680aee28ad6490a705efa93ad32fde07a418c013319126704fef09
 dependencies:
   required:
-    - pkg-config
-    - mspcrt
+    - brotli
+    - bzip2
+    - cairo
+    - expat
+    - fontconfig
+    - freetype
+    - fribidi
+    - graphene
+    - gdk-pixbuf
     - gettext
     - glib
     - gobject-introspection
     - gstreamer
+    - gst-plugins-base
+    - gst-plugins-bad
+    - gst-rtsp-server
+    - gtk3
+    - harfbuzz
+    - json-glib
+    - libffi
+    - libiconv
+    - libpng
+    - mspcrt
+    - pango
+    - pcre2
+    - pkg-config
+    - pixman
+    - zlib
 script: build.bat

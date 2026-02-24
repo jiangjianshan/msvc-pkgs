@@ -54,7 +54,7 @@ diff -urN openssl-3.5.4-orig/exporters/pkg-config/libcrypto.pc.in openssl-3.5.4/
 +       return $volume . File::Spec::Unix->catpath('', $directories, $no_file ? () : $file);
 +   }
 +-}
-++prefix={- unixify($OpenSSL::safe::installdata::PREFIX[0], 1); -}
++prefix={- unixify($OpenSSL::safe::installdata::PREFIX[0], 1); -}
  exec_prefix=${prefix}
  libdir={- if (defined $OpenSSL::safe::installdata::LIBDIR_REL_PREFIX[0]) {
                my $x = '';

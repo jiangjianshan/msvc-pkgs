@@ -5,9 +5,8 @@ sha256: 3d2039c9175e55571dc97b154ef23096ee8b6752085d5d9b07c530beb23f2d09
 dependencies:
   required:
     - boost
-    - zlib
     - gmp
     - mpfr
     - papilo
-    - mspcrt
+    - zlib
 script: build.bat

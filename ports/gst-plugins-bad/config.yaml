@@ -1,0 +1,57 @@
+name: gst-plugins-bad
+version: 1.27.90
+url: https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.27.90.tar.xz
+sha256: 60d9fcc725bb56f4559b4925e6f469cd43bb96ec1bfd7554295e2b8c53ba9d4b
+dependencies:
+  required:
+    - cairo
+    - chromaprint
+    - curl
+    - DirectX-Headers
+    - fdk-aac
+    - flac
+    - fluidsynth
+    - gettext
+    - glib
+    - gobject-introspection
+    - gstreamer
+    - gst-plugins-base
+    - icu4c
+    - json-glib
+    - lcms2
+    - libaom
+    - libass
+    - libdatrie
+    - libde265
+    - libffi
+    - libiconv
+    - libidn2
+    - libogg
+    - librsvg
+    - libsndfile
+    - libthai
+    - libwebp
+    - libxml2
+    - libusb
+    - libvorbis
+    - llvm-project
+    - mspcrt
+    - ncurses
+    - nettle
+    - openal-soft
+    - openjpeg
+    - openssl
+    - OpenCV
+    - OpenEXR
+    - opus
+    - orc
+    - pango
+    - pcre2
+    - pkg-config
+    - readline
+    - SDL3
+    - SVT-AV1
+    - vmaf
+    - xz
+    - zlib
+script: build.bat

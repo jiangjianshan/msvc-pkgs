@@ -1,14 +1,18 @@
 name: gstreamer
-version: 1.27.2
-url: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.27.2.tar.xz
-sha256: ce129c7ea92dce3063b029171d1324d203927132fc3e0cf92b784ddd055c241d
+version: 1.27.90
+url: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.27.90.tar.xz
+sha256: e6379b7413e72b0fd6e734d3a2ae875edd58108f1f4315bfe47907909f41bc80
 dependencies:
   required:
-    - pkg-config
-    - mspcrt
     - gettext
     - glib
     - gmp
     - gsl
     - gobject-introspection
+    - libffi
+    - libiconv
+    - mspcrt
+    - pcre2
+    - pkg-config
+    - zlib
 script: build.bat

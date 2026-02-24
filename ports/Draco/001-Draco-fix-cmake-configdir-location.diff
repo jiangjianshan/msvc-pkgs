@@ -1,0 +1,25 @@
+diff -urN Draco-1.5.7-orig/cmake/draco_install.cmake Draco-1.5.7/cmake/draco_install.cmake
+--- Draco-1.5.7-orig/cmake/draco_install.cmake	2024-01-18 04:42:36.000000000 +0800
++++ Draco-1.5.7/cmake/draco_install.cmake	2026-01-14 14:01:20.438470600 +0800
+@@ -98,7 +98,7 @@
+     configure_package_config_file(
+       "${draco_root}/cmake/draco-config.cmake.template"
+       "${draco_build}/draco-config.cmake"
+-      INSTALL_DESTINATION "${data_path}/cmake/draco")
++      INSTALL_DESTINATION "${libs_path}/cmake/draco")
+ 
+     write_basic_package_version_file(
+       "${draco_build}/draco-config-version.cmake"
+@@ -114,10 +114,10 @@
+       EXPORT dracoExport
+       NAMESPACE draco::
+       FILE draco-targets.cmake
+-      DESTINATION "${data_path}/cmake/draco")
++      DESTINATION "${libs_path}/cmake/draco")
+ 
+     install(FILES "${draco_build}/draco-config.cmake"
+                   "${draco_build}/draco-config-version.cmake"
+-            DESTINATION "${data_path}/cmake/draco")
++            DESTINATION "${libs_path}/cmake/draco")
+   endif(DRACO_INSTALL)
+ endmacro()

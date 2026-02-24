@@ -6,6 +6,5 @@ depth: 1
 dependencies:
   required:
     - BuildTools
-    - mspcrt
     - gmp
 script: build.sh

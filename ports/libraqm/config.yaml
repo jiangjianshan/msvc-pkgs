@@ -4,8 +4,18 @@ url: https://github.com/HOST-Oman/libraqm/archive/refs/tags/v0.10.2.tar.gz
 sha256: db68fd9f034fc40ece103e511ffdf941d69f5e935c48ded8a31590468e42ba72
 dependencies:
   required:
-    - pkg-config
-    - freetype
-    - harfbuzz
+    - brotli
+    - bzip2
     - fribidi
+    - freetype
+    - gettext
+    - glib
+    - harfbuzz
+    - libffi
+    - libiconv
+    - libpng
+    - mspcrt
+    - pcre2
+    - pkg-config
+    - zlib
 script: build.bat

@@ -1,0 +1,8 @@
+name: boringssl
+version: 0.20260211.0
+url: https://github.com/google/boringssl/archive/refs/tags/0.20260211.0.tar.gz
+sha256: 52e2d96759d483e384e3964a2513781ea05cb6b2d677f1f8f5a4049aea30535d
+dependencies:
+  required:
+    - nasm
+script: build.bat

@@ -4,6 +4,7 @@ url: https://github.com/thestk/rtmidi/archive/refs/tags/6.0.0.tar.gz
 sha256: ef7bcda27fee6936b651c29ebe9544c74959d0b1583b716ce80a1c6fea7617f0
 dependencies:
   required:
-    - pkg-config
     - libsndfile
+    - mspcrt
+    - pkg-config
 script: build.bat

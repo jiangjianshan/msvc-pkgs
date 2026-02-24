@@ -1,16 +1,28 @@
 name: vala
-version: 0.56.17
-url: https://download.gnome.org/sources/vala/0.56/vala-0.56.17.tar.xz
-sha256: 26100c4e4ef0049c619275f140d97cf565883d00c7543c82bcce5a426934ed6a
+version: 0.56.18
+url: https://download.gnome.org/sources/vala/0.56/vala-0.56.18.tar.xz
+sha256: f2affe7d40ab63db8e7b9ecc3f6bdc9c2fc7e3134c84ff2d795f482fe926a382
 dependencies:
   required:
-    - mspcrt
+    - brotli
+    - bzip2
+    - cairo
+    - expat
+    - fontconfig
+    - freetype
+    - fribidi
     - gettext
     - gobject-introspection
     - glib
     - harfbuzz
+    - libffi
     - libiconv
+    - libpng
+    - libiconv
+    - mspcrt
+    - pcre2
     - pixman
+    - zlib
   optional:
     - graphviz:required
 script: build.sh

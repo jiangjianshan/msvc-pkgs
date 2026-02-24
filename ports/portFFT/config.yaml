@@ -3,7 +3,4 @@ version: main
 url: https://github.com/codeplaysoftware/portFFT.git
 recursive: false
 depth: 1
-dependencies:
-  required:
-    - mspcrt
 script: build.bat

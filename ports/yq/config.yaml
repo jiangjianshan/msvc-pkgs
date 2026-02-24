@@ -2,5 +2,4 @@ name: yq
 version: 4.48.1
 url: https://github.com/mikefarah/yq/archive/refs/tags/v4.48.1.tar.gz
 sha256: 591158368f8155421bd8821754a67b4478ee2cde205b7abfbf2d50f90769cf0e
-dependencies:
 script: build.bat

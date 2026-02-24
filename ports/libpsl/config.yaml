@@ -4,10 +4,10 @@ url: https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5
 sha256: 1dcc9ceae8b128f3c0b3f654decd0e1e891afc6ff81098f227ef260449dae208
 dependencies:
   required:
-    - mspcrt
-    - pkg-config
     - icu4c
     - libiconv
     - libidn2
     - libunistring
+    - mspcrt
+    - pkg-config
 script: build.bat

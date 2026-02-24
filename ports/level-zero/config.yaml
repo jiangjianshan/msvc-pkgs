@@ -1,6 +1,5 @@
 name: level-zero
-version: 1.26.0
-url: https://github.com/oneapi-src/level-zero/archive/refs/tags/v1.26.0.tar.gz
-sha256: 252dc01ffd2134ba25563d3851b755ff81cbda5982410296d09f3f54c118c16f
-dependencies:
+version: 1.26.3
+url: https://github.com/oneapi-src/level-zero/archive/refs/tags/v1.26.3.tar.gz
+sha256: 6445e7658bdf684f6669f6b57b1c381244db4f47d36b58432c3353ed9665a130
 script: build.bat

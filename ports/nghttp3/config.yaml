@@ -1,5 +1,5 @@
 name: nghttp3
-version: main
+version: v1.15.0
 url: https://github.com/ngtcp2/nghttp3.git
 recursive: true
 depth: 1

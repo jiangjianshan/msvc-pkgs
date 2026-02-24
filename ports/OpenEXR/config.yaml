@@ -6,5 +6,4 @@ dependencies:
   required:
     - Imath
     - libdeflate
-    - mspcrt
 script: build.bat

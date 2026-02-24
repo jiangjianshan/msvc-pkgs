@@ -2,15 +2,16 @@
 #
 #  Copyright (c) 2024 Jianshan Jiang
 #
+import glob
 import os
+import platform
 import re
+
 from pathlib import Path
 from typing import Dict, Optional
 
-from mpt import ROOT_DIR
-from mpt.bash import BashUtils
-from mpt.clean import CleanManager
-from mpt.config import UserConfig
+from mpt import root_dir
+from mpt.config import LibraryConfig
 from mpt.dependency import DependencyResolver
 from mpt.git import GitHandler
 from mpt.history import HistoryManager
@@ -21,112 +22,146 @@ from mpt.source import SourceManager
 
 
 class BuildManager:
-    """Manages the complete build lifecycle for libraries with dependency type support.
+    _fail_libs = []
 
-    Handles source acquisition, environment preparation, script execution, and
-    build validation. Supports conditional rebuilding based on dependency changes,
-    configuration updates, and source code modifications.
-    """
+    @classmethod
+    def get_triplet(cls, arch):
+        arch_map = {
+            'x86': 'i686',
+            'x86_32': 'i686',
+            'i386': 'i686',
+            'i486': 'i686',
+            'i585': 'i686',
+            'i686': 'i686',
+            'x64': 'x86_64',
+            'x86_64': 'x86_64',
+            'amd64': 'x86_64'
+        }
+        target_arch = arch_map.get(arch, 'x86_64')
+        system = platform.system().lower()
+        machine = platform.machine().lower()
+        os_name = system
+        vendor = "unknown"
+        abi = "gnu"
+        if system == "darwin":
+            vendor = "apple"
+        if system == "darwin":
+            os_name = "darwin"
+        elif system == "windows":
+            os_name = "windows"
+            vendor = "pc"
+            abi = "msvc"
+        elif system == "linux":
+            os_name = "linux"
+        elif system.startswith("cygwin"):
+            os_name = "cygwin"
+        elif system.startswith("msys"):
+            os_name = "msys"
+        return f"{target_arch}-{vendor}-{os_name}-{abi}"
 
-    @staticmethod
-    def build_library(triplet: str, node_name: str, config: Dict) -> bool:
-        """
-        Execute the complete build process for a library with dependency tracking.
 
-        Args:
-            triplet: Target triplet specification (e.g., "x64-windows", "arm64-windows")
-            node_name: Library identifier with optional dependency type suffix
-            config: Library configuration dictionary containing build instructions
-        """
-        # Parse node name to get library name and dependency type
-        lib_name, dep_type, _ = DependencyResolver.parse_dependency_name(node_name)
+    @classmethod
+    def postaction(cls, node_name, triplet):
+        lib, _ = DependencyResolver.parse_dependency_name(node_name)
+        config = LibraryConfig.load(lib)
+        lib = config.get('name')
+        lib_ver = str(config.get('version'))
+        prefix = root_dir / 'packages' / f"{lib}-{lib_ver}-{triplet}"
+        # process .pc files
+        pkgconfig_dir = prefix / 'lib' / 'pkgconfig'
+        if not pkgconfig_dir.exists():
+            pkgconfig_dir = prefix / 'share' / 'pkgconfig'
+        if pkgconfig_dir.exists():
+            pc_files = list(pkgconfig_dir.glob("*.pc"))
+            sed_cmd = r'sed -e "s#\([A-Za-z]\):/\([^/]\)#/\L\1\E/\2#g" -e "s|[ ]*-L/[^ ]*||g" -e "s/[ ]*$//" -e "s| \([^ -][^ ]*/\)\{1,\}\([^/]*\)\.lib| -l\2|g" -i'
+            if pc_files:
+                for pc_file in pc_files:
+                    file_name = os.path.basename(pc_file)
+                    RichLogger.info(f"[[bold cyan]{node_name}[/bold cyan]] Processing [bold green]{file_name}[/bold green]")
+                    full_cmd = f"{sed_cmd} {file_name}"
+                    Runner.execute(full_cmd, pkgconfig_dir)
+        # process .la files
+        lib_dir = prefix / 'lib'
+        if lib_dir.exists():
+            la_files = list(lib_dir.glob("*.la"))
+            sed_cmd = r'''sed -e "s|[ ]*-L/[^ ']*||g" -e "s|/[^ ']*/\(lib[^ ']*\.la\)|\1|g" -i'''
+            if la_files:
+                for la_file in la_files:
+                    file_name = os.path.basename(la_file)
+                    RichLogger.info(f"[[bold cyan]{node_name}[/bold cyan]] Processing [bold green]{file_name}[/bold green]")
+                    full_cmd = f"{sed_cmd} {file_name}"
+                    Runner.execute(full_cmd, lib_dir)
 
-        # Fetch source code
-        source_path = SourceManager.fetch_source(config)
+
+    @classmethod
+    def build_library(cls, arch, node_name, config):
+        if node_name in cls._fail_libs:
+            RichLogger.warning(f"[[bold cyan]{node_name}[/bold cyan]] Build skipped - previous build failed")
+            return False
+        triplet = cls.get_triplet(arch)
+        lib, dep_type = DependencyResolver.parse_dependency_name(node_name)
+        source_path = SourceManager.fetch(config)
         if not source_path or not source_path.exists():
             RichLogger.critical(f"[[bold cyan]{node_name}[/bold cyan]] Source acquisition failed")
             return False
-
-        # Check if rebuild is required
         if not BuildManager._should_build(triplet, node_name, config):
             RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] Build skipped - already up to date")
             return True
-
-        # Create log directory if it doesn't exist
-        log_dir = ROOT_DIR / 'logs'
+        log_dir = root_dir / 'buildtrees' / 'logs'
         log_dir.mkdir(parents=True, exist_ok=True)
-
-        # Run the main build script
         script_file = config.get('script')
         if script_file:
-            log_file = log_dir / triplet / f"{lib_name}.log"
-            script_path = ROOT_DIR / 'ports' / lib_name / script_file
+            log_file = log_dir / triplet / f"{lib}.log"
+            script_path = root_dir / 'ports' / lib / script_file
             if not script_path.exists():
                 RichLogger.error(f"Build script not found: [bold cyan]{script_path}[/bold cyan]")
                 return False
-            success, installed_files = Runner.run_script(triplet, lib_name, script_path, log_file)
+            Runner.setup_environment(arch, node_name)
+            success = Runner.run_script(script_path, log_file=log_file)
             if success:
-                prefix = UserConfig.get_prefix(triplet, lib_name)
-                # Extract files skipped during installation from the log
-                skipped_files = BuildManager.extract_skipped_files(log_file, prefix)
-                # Add any missing skipped files to installed_files
-                for file_path in skipped_files:
-                    if file_path not in installed_files:
-                        installed_files.append(file_path)
-                info_file = ROOT_DIR / 'installed' / 'info' / triplet / f"{lib_name}.list"
-                info_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(info_file, 'w', encoding='utf-8') as f:
-                    for file_path in sorted(installed_files):
-                        f.write(f"{file_path}\n")
                 version = config.get('version', 'unknown')
                 HistoryManager.add_record(triplet, node_name, version)
                 RichLogger.info(f"[[bold cyan]{node_name}[/bold cyan]] Build completed successfully")
+                if node_name in cls._fail_libs:
+                    cls._fail_libs.remove(node_name)
+                if script_file.endswith('.bat'):
+                    cls.postaction(node_name, triplet)
                 return True
             else:
                 HistoryManager.remove_record(triplet, node_name)
                 RichLogger.error(f"[[bold cyan]{node_name}[/bold cyan]] Build failed")
+                if node_name not in cls._fail_libs:
+                    cls._fail_libs.append(node_name)
                 return False
         else:
             return True
         return False
 
-    @staticmethod
-    def _should_build(triplet: str, node_name: str, config: Dict) -> bool:
-        """
-        Determine whether a library requires rebuilding based on multiple factors.
 
-        Args:
-            triplet: Target triplet for build compatibility checking
-            node_name: Library identifier with dependency type specification
-            config: Library configuration containing source and version information
-        """
+    @classmethod
+    def _should_build(cls, triplet, node_name, config):
         # Parse node name to get library name and dependency type
-        lib_name, dep_type, _ = DependencyResolver.parse_dependency_name(node_name)
-
+        lib, dep_type = DependencyResolver.parse_dependency_name(node_name)
         # Check if library node is not installed
         if not HistoryManager.check_installed(triplet, node_name):
             RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] Build required: not installed")
             return True
-
         # Check if library node update is available
         if HistoryManager.check_for_update(triplet, node_name, config):
             RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] Build required: update available")
             return True
-
         # Get library node information
         lib_info = HistoryManager.get_library_info(triplet, node_name)
         if not lib_info:
             RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] Build required: no library info")
             return True
-
         # Check if library node has no build timestamp
         lib_built = lib_info.get('built')
         if not lib_built:
             RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] Build required: no build timestamp")
             return True
-
         # Check for any file changes in the port directory
-        lib_dir = ROOT_DIR / 'ports' / lib_name
+        lib_dir = root_dir / 'ports' / lib
         if lib_dir.exists():
             # Walk through all files in the port directory
             for file_path in lib_dir.rglob('*'):
@@ -135,10 +170,10 @@ class BuildManager:
                     if file_mtime > lib_built.timestamp():
                         RichLogger.info(f"[[bold cyan]{node_name}[/bold cyan]] Build required: file {file_path.relative_to(lib_dir)} modified")
                         return True
-
         # Check for source code updates (for git repositories)
-        if SourceManager.is_git_url(config.get('url', '')):
-            source_dir = ROOT_DIR / 'sources' / lib_name
+        url = config.get('url', '')
+        if url.endswith('.git'):
+            source_dir = root_dir / 'buildtrees' / 'sources' / lib
             if source_dir.exists():
                 last_commit_time = GitHandler.get_last_commit_time(source_dir)
                 if not last_commit_time:
@@ -147,67 +182,21 @@ class BuildManager:
                 elif last_commit_time > lib_built.timestamp():
                     RichLogger.info(f"[[bold cyan]{node_name}[/bold cyan]] Build required: source code updated")
                     return True
-
         # Check all dependencies for rebuild requirements
-        deps = DependencyResolver.get_dependencies(lib_name, dep_type)
-
+        deps = DependencyResolver.get_dependencies(lib, dep_type)
         for dep in deps:
             RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] Checking dependency: [bold cyan]{dep}[/bold cyan]")
-
             # Get dependency information
             dep_info = HistoryManager.get_library_info(triplet, dep)
             if not dep_info:
                 RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] No info for dependency [bold cyan]{dep}[/bold cyan]")
                 continue
-
             dep_built = dep_info.get('built')
             if not dep_built:
                 RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] No build timestamp for dependency [bold cyan]{dep}[/bold cyan]")
                 continue
-
             # Compare build timestamps
             if dep_built > lib_built:
                 RichLogger.debug(f"[[bold cyan]{node_name}[/bold cyan]] Build required: dependency [bold cyan]{dep}[/bold cyan] was updated")
                 return True
-
         return False
-
-    @staticmethod
-    def extract_skipped_files(log_file: Path, prefix: Path) -> list[str]:
-        """
-        Extract file paths from build logs that were skipped during installation.
-        Handles multiple build systems (CMake, Meson, Autotools).
-
-        Args:
-            log_file: Path to the build log file
-            prefix: Installation prefix path to remove from the found paths
-
-        Returns:
-            List of relative file paths (as strings) that were skipped during installation
-        """
-        skipped_files = []
-        if not log_file.exists():
-            return skipped_files
-
-        prefix_str = str(prefix).replace('\\', '/')
-        patterns = [
-            # CMake: -- Up-to-date: /path/to/file
-            re.compile(r'-- Up-to-date:\s*(.*)$'),
-        ]
-        with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
-            for line in f:
-                line = line.strip()
-                for pattern in patterns:
-                    match = pattern.search(line)
-                    if match:
-                        full_path = match.group(1).strip()
-                        # Remove any quotes around the path and unify separators
-                        full_path = full_path.strip("'\"").replace('\\', '/')
-                        if full_path.startswith(prefix_str):
-                            relative_path = full_path[len(prefix_str):].lstrip('/')
-
-                            file_path = prefix / relative_path
-                            if file_path.exists() and file_path.is_file():
-                                skipped_files.append(relative_path)
-                        break  # Stop checking other patterns if matched
-        return skipped_files

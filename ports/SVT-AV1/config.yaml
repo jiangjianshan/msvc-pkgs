@@ -5,5 +5,4 @@ sha256: f65358499f572a47d6b076dda73681a8162b02c0b619a551bc2d62ead8ee719a
 dependencies:
   required:
     - nasm
-    - mspcrt
 script: build.bat

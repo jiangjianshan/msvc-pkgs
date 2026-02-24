@@ -5,8 +5,13 @@ recursive: false
 depth: 1
 dependencies:
   required:
+    - bzip2
     - CoinUtils
-    - Osi
     - Data-Sample
     - Data-Netlib
+    - Osi
+    - lapack
+    - ThirdParty-ASL
+    - ThirdParty-Glpk
+    - zlib
 script: build.sh

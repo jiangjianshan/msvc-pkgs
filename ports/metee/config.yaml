@@ -1,0 +1,6 @@
+name: metee
+version: 6.2.1
+url: https://github.com/intel/metee/archive/refs/tags/6.2.1.tar.gz
+sha256: 84d36a8cc290a3e4df5f4c3a06e777b66d000868975b4c88d8df752862f96b8c
+dependencies:
+script: build.bat

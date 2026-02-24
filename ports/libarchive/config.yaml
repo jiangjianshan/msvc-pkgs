@@ -12,9 +12,8 @@ dependencies:
     - lzo
     - mbedTLS
     - nettle
-    - mspcrt
     - openssl
-    - pcre:required
+    - pcre2
     - xz
     - zlib
     - zstd

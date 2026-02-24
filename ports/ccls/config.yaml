@@ -5,8 +5,13 @@ recursive: true
 depth: 1
 dependencies:
   required:
+    - icu4c
+    - libiconv
     - libxml2
     - llvm-project
     - mspcrt
+    - RapidJSON
+    - xz
     - zlib
+    - zstd
 script: build.bat

@@ -2,5 +2,4 @@ name: apr
 version: 1.7.6
 url: https://github.com/apache/apr/archive/refs/tags/1.7.6.tar.gz
 sha256: 01a1811d9f69fef2656c742890e2e911d81be48362740cb003878e0c9f8f6416
-dependencies:
 script: build.bat

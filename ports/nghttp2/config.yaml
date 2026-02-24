@@ -8,7 +8,6 @@ dependencies:
     - c-ares
     - libevent
     - libxml2
-    - mspcrt
     - openssl
     - zlib
 script: build.bat

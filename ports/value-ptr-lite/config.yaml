@@ -2,5 +2,4 @@ name: value-ptr-lite
 version: 0.2.1
 url: https://github.com/nonstd-lite/value-ptr-lite/archive/refs/tags/v0.2.1.tar.gz
 sha256: 683a6d98512249c4899d70ee1c3005843e1b05988c51f332fc0ad23cff9585f0
-dependencies:
 script: build.bat

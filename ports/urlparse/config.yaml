@@ -3,5 +3,4 @@ version: main
 url: https://github.com/ngtcp2/urlparse.git
 recursive: true
 depth: 1
-dependencies:
 script: build.sh

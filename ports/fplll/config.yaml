@@ -7,5 +7,4 @@ dependencies:
     - gmp
     - mpfr
     - qd
-    - mspcrt
 script: build.sh

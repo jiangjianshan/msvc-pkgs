@@ -1,14 +1,58 @@
 name: gst-libav
-version: 1.27.2
-url: https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.27.2.tar.xz
-sha256: b4375bbc233e658ffe7f0211e40b39cbe95fe6153197f0a406ffc7967854edc8
+version: 1.27.90
+url: https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.27.90.tar.xz
+sha256: 4ff894d57a1328424892f155aa919ee13568437e05457046858186e9ccd2ba59
 dependencies:
   required:
-    - pkg-config
-    - mspcrt
+    - bzip2
+    - cairo
+    - chromaprint
+    - dav1d
+    - expat
+    - fdk-aac
+    - ffmpeg
+    - flac
+    - fontconfig
+    - freetype
+    - fribidi
     - gettext
+    - gdk-pixbuf
     - glib
+    - gmp
     - gobject-introspection
     - gstreamer
-    - ffmpeg
+    - gst-plugins-base
+    - harfbuzz
+    - json-glib
+    - lcms2
+    - libaom
+    - libdatrie
+    - libffi
+    - libiconv
+    - libjpeg-turbo
+    - libjxl
+    - libogg
+    - libpng
+    - libthai
+    - librsvg
+    - libvpx
+    - libwebp
+    - libxml2
+    - libzmq
+    - mspcrt
+    - nghttp2
+    - openh264
+    - openjpeg
+    - openssl
+    - opus
+    - pango
+    - pcre2
+    - pkg-config
+    - sqlite
+    - SVT-AV1
+    - VVenc
+    - x264
+    - x265
+    - xz
+    - zlib
 script: build.bat

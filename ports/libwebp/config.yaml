@@ -4,11 +4,10 @@ url: https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libw
 sha256: 61f873ec69e3be1b99535634340d5bde750b2e4447caa1db9f61be3fd49ab1e5
 dependencies:
   required:
-    - zlib
+    - freeglut
+    - giflib
     - libpng
     - libjpeg-turbo
     - libtiff:required
-    - giflib
-    - mspcrt
-    - freeglut
+    - zlib
 script: build.bat

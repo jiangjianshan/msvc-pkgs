@@ -4,7 +4,6 @@ url: https://www.multiprecision.org/downloads/cmh-1.1.1.tar.gz
 sha256: 214d5d51fea4af54cda85ef9aee43eff8a711b725a527574d0f3b5581dde4d59
 dependencies:
   required:
-    - pkg-config
     - gmp
     - gnulib
     - fplll
@@ -12,4 +11,5 @@ dependencies:
     - mpfrcx
     - mpc
     - pari
+    - qd
 script: build.sh

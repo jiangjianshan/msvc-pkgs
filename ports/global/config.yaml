@@ -5,7 +5,9 @@ sha256: f6e7fd0b68aed292e85bb686616baf6551d5c9424adcddca11d808ba318cb320
 dependencies:
   required:
     - ctags
+    - icu4c
     - mspcrt
     - ncurses
     - sqlite
+    - zlib
 script: build.sh

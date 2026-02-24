@@ -4,16 +4,30 @@ url: https://download.gnome.org/sources/pangomm/2.56/pangomm-2.56.1.tar.xz
 sha256: 539f5aa60e9bdc6b955bb448e2a62cc14562744df690258040fbb74bf885755d
 dependencies:
   required:
-    - pkg-config
+    - brotli
+    - bzip2
     - cairo
     - cairomm
+    - expat
     - doxygen
+    - fontconfig
+    - freetype
     - fribidi
+    - gettext
+    - glib
     - glibmm
-    - mm-common
-    - doxygen
+    - harfbuzz
+    - libffi
+    - libiconv
+    - libpng
     - libxslt
     - libsigc++
+    - mm-common
     - pango
     - perl
+    - pcre2
+    - pixman
+    - mspcrt
+    - pkg-config
+    - zlib
 script: build.bat

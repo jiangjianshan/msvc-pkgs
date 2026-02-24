@@ -12,18 +12,12 @@
 #   ROOT_DIR      - Root directory of the msvc-pkg project.
 #   SRC_DIR       - Source code directory of the current library.
 #   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-#                   This path is where the built artifacts for *this specific library* will be installed.
-#                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-#                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 #   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-#   _PREFIX       - **Default installation path prefix** for all built libraries.
-#                   This is the root directory where libraries are installed **unless overridden**
-#                   by a specific `PREFIX` setting for an individual library.
 #
 #   For each direct dependency `{Dependency}` of the current library:
+#     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 #     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 #     {Dependency}_VER - Version of the dependency `{Dependency}`.
-
 . $ROOT_DIR/compiler.sh $ARCH
 BUILD_DIR=$SRC_DIR/build${ARCH//x/}
 C_OPTS='-diagnostics:column -MD -nologo -utf-8 -W0 -Xclang -O2 -fopenmp -fms-extensions -fms-hotpatch -fms-compatibility -fms-compatibility-version='${MSC_VER}
@@ -73,39 +67,40 @@ configure_stage()
   # 3. Taken care of the logic of func_resolve_sysroot() and func_replace_sysroot()
   #    in ltmain.sh, otherwise may have '-L=*' in the filed of 'dependency_libs' in
   #    *.la. So don't set --with-sysroot if --libdir has been set
-  AR="$ROOT_DIR/wrappers/ar-lib lib -nologo"                                                       \
-  CC="$ROOT_DIR/wrappers/compile clang-cl"                                                         \
-  CFLAGS="$C_OPTS"                                                                                 \
-  CPP="$ROOT_DIR/wrappers/compile clang-cl -E"                                                     \
-  CPPFLAGS="$C_DEFS -I$(cygpath -u "${NCURSES_PREFIX:-$_PREFIX}")/include/ncurses"                 \
-  CXX="$ROOT_DIR/wrappers/compile clang-cl"                                                        \
-  CXXFLAGS="-EHsc $C_OPTS"                                                                         \
-  CXXCPP="$ROOT_DIR/wrappers/compile clang-cl -E"                                                  \
-  DLLTOOL="link -verbose -dll"                                                                     \
-  LD="link -nologo"                                                                                \
-  LIBS="-lpcrt"                                                                                    \
-  NM="dumpbin -nologo -symbols"                                                                    \
-  PKG_CONFIG="/usr/bin/pkg-config"                                                                 \
-  RANLIB=":"                                                                                       \
-  RC="$ROOT_DIR/wrappers/windres-rc rc -nologo"                                                    \
-  STRIP=":"                                                                                        \
-  WINDRES="$ROOT_DIR/wrappers/windres-rc rc -nologo"                                               \
-  ../configure --host="$HOST_TRIPLET"                                                              \
-    --prefix="$PREFIX"                                                                             \
-    --bindir="$PREFIX/bin"                                                                         \
-    --includedir="$PREFIX/include"                                                                 \
-    --libdir="$PREFIX/lib"                                                                         \
-    --datarootdir="$PREFIX/share"                                                                  \
-    --enable-win32-relocatable                                                                     \
-    --enable-curses="ncurses.lib"                                                                  \
-    --enable-curses-include="$(cygpath -u "${NCURSES_PREFIX:-$_PREFIX}")/include/ncurses"          \
-    --enable-compile-in-filters                                                                    \
-    --enable-32-bit-hash-fun                                                                       \
-    --enable-sloppy-null-term-strings                                                              \
-    --enable-static                                                                                \
-    --enable-shared                                                                                \
-    --disable-rpath                                                                                \
-    lt_cv_deplibs_check_method=${lt_cv_deplibs_check_method='pass_all'}                            \
+  AR="$ROOT_DIR/wrappers/ar-lib lib -nologo"                                   \
+  CC="$ROOT_DIR/wrappers/compile clang-cl"                                     \
+  CFLAGS="$C_OPTS"                                                             \
+  CPP="$ROOT_DIR/wrappers/compile clang-cl -E"                                 \
+  CPPFLAGS="$C_DEFS -I$(cygpath -u "$NCURSES_PREFIX")/include/ncurses"         \
+  CXX="$ROOT_DIR/wrappers/compile clang-cl"                                    \
+  CXXFLAGS="-EHsc $C_OPTS"                                                     \
+  CXXCPP="$ROOT_DIR/wrappers/compile clang-cl -E"                              \
+  DLLTOOL="link -verbose -dll"                                                 \
+  LD="lld-link"                                                                \
+  LIBS="-lpcrt"                                                                \
+  LDFLAGS="-fuse-ld=lld"                                                       \
+  NM="dumpbin -nologo -symbols"                                                \
+  PKG_CONFIG="/usr/bin/pkg-config"                                             \
+  RANLIB=":"                                                                   \
+  RC="$ROOT_DIR/wrappers/windres-rc rc -nologo"                                \
+  STRIP=":"                                                                    \
+  WINDRES="$ROOT_DIR/wrappers/windres-rc rc -nologo"                           \
+  ../configure --host="$HOST_TRIPLET"                                          \
+    --prefix="$PREFIX"                                                         \
+    --bindir="$PREFIX/bin"                                                     \
+    --includedir="$PREFIX/include"                                             \
+    --libdir="$PREFIX/lib"                                                     \
+    --datarootdir="$PREFIX/share"                                              \
+    --enable-win32-relocatable                                                 \
+    --enable-curses="ncurses.lib"                                              \
+    --enable-curses-include="$(cygpath -u "$NCURSES_PREFIX")/include/ncurses"  \
+    --enable-compile-in-filters                                                \
+    --enable-32-bit-hash-fun                                                   \
+    --enable-sloppy-null-term-strings                                          \
+    --enable-static                                                            \
+    --enable-shared                                                            \
+    --disable-rpath                                                            \
+    lt_cv_deplibs_check_method=${lt_cv_deplibs_check_method='pass_all'}        \
     gt_cv_locale_zh_CN=none || exit 1
 }
 

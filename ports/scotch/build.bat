@@ -13,15 +13,10 @@ rem   PKG_VER       - Version of the current library being built.
 rem   ROOT_DIR      - Root directory of the msvc-pkg project.
 rem   SRC_DIR       - Source code directory of the current library.
 rem   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-rem                   This path is where the built artifacts for *this specific library* will be installed.
-rem                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-rem                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 rem   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-rem   _PREFIX       - **Default installation path prefix** for all built libraries.
-rem                   This is the root directory where libraries are installed **unless overridden**
-rem                   by a specific `PREFIX` setting for an individual library.
 rem
 rem   For each direct dependency `{Dependency}` of the current library:
+rem     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 rem     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 rem     {Dependency}_VER - Version of the dependency `{Dependency}`.
 
@@ -33,6 +28,7 @@ set F_OPTS=-MD -nologo -Qdiag-disable:10448 -Qopenmp -Qopenmp-simd -fpp
 
 call :clean_stage
 call :configure_stage
+call :patch_stage
 call :build_stage
 call :install_stage
 call :clean_stage
@@ -46,20 +42,25 @@ exit /b 0
 :configure_stage
 echo "Configuring %PKG_NAME% %PKG_VER%"
 mkdir "%BUILD_DIR%" && cd "%BUILD_DIR%"
-rem NOTE: In order to avoid overide metis.h from METIS, The variable CMAKE_INSTALL_INCLUDEDIR
-rem       must be set here.
 cmake -G "Ninja"                                                               ^
   -DBUILD_SHARED_LIBS=ON                                                       ^
   -DCMAKE_BUILD_TYPE=Release                                                   ^
   -DCMAKE_C_COMPILER=cl                                                        ^
   -DCMAKE_C_FLAGS="%C_OPTS% %C_DEFS%"                                          ^
-  -DCMAKE_C_STANDARD_LIBRARIES="pthread.lib"                                   ^
-  -DCMAKE_Fortran_COMPILER=ifort                                               ^
+  -DCMAKE_Fortran_COMPILER=ifx                                                 ^
   -DCMAKE_Fortran_FLAGS="%F_OPTS%"                                             ^
   -DCMAKE_INSTALL_PREFIX="%PREFIX%"                                            ^
-  -DCMAKE_INSTALL_INCLUDEDIR="%PREFIX%\include\scotch"                         ^
   -DENABLE_TESTS=OFF                                                           ^
   .. || exit 1
+exit /b 0
+
+:patch_stage
+echo "Patching %PKG_NAME% %PKG_VER%"
+rem TODO:
+rem 1. CMAKE_LINK_DEF_FILE_FLAG or other flags have been tried but still can't
+rem    change /Qoption,link,/DEF to /DEF
+cd "%BUILD_DIR%"
+sed -e "s|/Qoption,link,||g" -i build.ninja
 exit /b 0
 
 :build_stage

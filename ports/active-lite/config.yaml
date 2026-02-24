@@ -3,5 +3,4 @@ version: master
 url: https://github.com/nonstd-lite/active-lite.git
 recursive: false
 depth: 1
-dependencies:
 script: build.bat

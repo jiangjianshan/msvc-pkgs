@@ -1,0 +1,8 @@
+name: iso-codes
+version: 4.20.1
+url: https://github.com/sailfishos-mirror/iso-codes/archive/refs/tags/v4.20.1.tar.gz
+sha256: 73cdfe1b2fc39d9908ec7faf3d854f33df6ec2ca80da7510187d08d46b62f6f2
+dependencies:
+  required:
+    - mspcrt
+script: build.bat

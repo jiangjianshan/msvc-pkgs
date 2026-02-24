@@ -13,15 +13,10 @@ rem   PKG_VER       - Version of the current library being built.
 rem   ROOT_DIR      - Root directory of the msvc-pkg project.
 rem   SRC_DIR       - Source code directory of the current library.
 rem   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-rem                   This path is where the built artifacts for *this specific library* will be installed.
-rem                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-rem                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 rem   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-rem   _PREFIX       - **Default installation path prefix** for all built libraries.
-rem                   This is the root directory where libraries are installed **unless overridden**
-rem                   by a specific `PREFIX` setting for an individual library.
 rem
 rem   For each direct dependency `{Dependency}` of the current library:
+rem     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 rem     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 rem     {Dependency}_VER - Version of the dependency `{Dependency}`.
 
@@ -46,8 +41,14 @@ exit /b 0
 echo "Configuring %PKG_NAME% %PKG_VER%"
 mkdir "%BUILD_DIR%"
 cd "%SRC_DIR%"
-rem TODO: If remove '-Dnls=disabled', build process will be failed at
-rem       'libintl_sprintf already defined in gstreamer-1.0.lib'
+rem NOTE:
+rem 1. non-system library, e.g. iconv.lib, should be put behind system library
+rem    e.g. Advapi32.lib, on c_winlibs and cpp_winlibs, otherwise will be failed
+rem    at 'libintl_sprintf already defined in gstreamer-1.0.lib' at this library
+rem 2. Define GI_EXTRA_BASE_DLL_DIRS to fix following issue:
+rem    ImportError: DLL load failed while importing _giscanner: The specified module could not be found
+set "GI_EXTRA_BASE_DLL_DIRS=%LIBICONV_PREFIX:\=/%/bin;%LIBICONV_PREFIX:\=/%/lib;%GETTEXT_PREFIX:\=/%/bin;%GETTEXT_PREFIX:\=/%/lib;%PCRE2_PREFIX:\=/%/bin;%LIBFFI_PREFIX:\=/%/bin;%ZLIB_PREFIX:\=/%/bin"
+set "GI_GIR_PATH=%GLIB_PREFIX:\=/%/share/gir-1.0"
 meson setup "%BUILD_DIR%"                                                      ^
   --buildtype=release                                                          ^
   --prefix="%PREFIX%"                                                          ^
@@ -56,11 +57,9 @@ meson setup "%BUILD_DIR%"                                                      ^
   -Dc_args="%C_OPTS% %C_DEFS%"                                                 ^
   -Dcpp_std=c++17                                                              ^
   -Dcpp_args="-EHsc %C_OPTS% %C_DEFS%"                                         ^
-  -Dc_winlibs="iconv.lib,pcrt.lib,Advapi32.lib"                                ^
-  -Dcpp_winlibs="iconv.lib,pcrt.lib,Advapi32.lib"                              ^
-  -Dnls=disabled                                                               ^
+  -Dc_winlibs="Advapi32.lib,iconv.lib"                                         ^
+  -Dcpp_winlibs="Advapi32.lib,iconv.lib"                                       ^
   -Ddoc=disabled                                                               ^
-  -Dexamples=disabled                                                          ^
   -Dtests=disabled || exit 1
 exit /b 0
 
@@ -72,11 +71,6 @@ exit /b 0
 :install_stage
 echo "Installing %PKG_NAME% %PKG_VER%"
 cd "%BUILD_DIR%" && ninja install || exit 1
-pushd "%PREFIX%\lib\pkgconfig"
-for %%f in ("gstreamer-*.pc") do (
-  sed -e "s#\([A-Za-z]\):/\([^/]\)#/\L\1\E/\2#g" -i "%%~f"
-)
-popd
 exit /b 0
 
 :end

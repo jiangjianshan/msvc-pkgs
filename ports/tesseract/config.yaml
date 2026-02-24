@@ -4,13 +4,35 @@ url: https://github.com/tesseract-ocr/tesseract/archive/refs/tags/5.5.1.tar.gz
 sha256: a7a3f2a7420cb6a6a94d80c24163e183cf1d2f1bed2df3bbc397c81808a57237
 dependencies:
   required:
+    - brotli
+    - bzip2
     - cairo
     - curl
+    - expat
     - fontconfig
+    - freetype
+    - fribidi
+    - gettext
+    - glib
+    - harfbuzz
     - icu4c
     - leptonica
     - libarchive
+    - libdatrie
+    - libdeflate
+    - libiconv
+    - libffi
+    - libjpeg-turbo
+    - libpng
+    - libthai
     - libtiff
+    - libwebp
+    - mspcrt
     - pango
+    - pcre2
+    - pixman
     - pkg-config
+    - xz
+    - zlib
+    - zstd
 script: build.bat

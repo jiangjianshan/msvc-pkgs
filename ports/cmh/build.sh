@@ -12,18 +12,12 @@
 #   ROOT_DIR      - Root directory of the msvc-pkg project.
 #   SRC_DIR       - Source code directory of the current library.
 #   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-#                   This path is where the built artifacts for *this specific library* will be installed.
-#                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-#                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 #   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-#   _PREFIX       - **Default installation path prefix** for all built libraries.
-#                   This is the root directory where libraries are installed **unless overridden**
-#                   by a specific `PREFIX` setting for an individual library.
 #
 #   For each direct dependency `{Dependency}` of the current library:
+#     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 #     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 #     {Dependency}_VER - Version of the dependency `{Dependency}`.
-
 . $ROOT_DIR/compiler.sh $ARCH
 BUILD_DIR=$SRC_DIR/build${ARCH//x/}
 C_OPTS='-diagnostics:column -experimental:c11atomics -fp:precise -MD -nologo -openmp:llvm -utf-8 -Zc:__cplusplus'
@@ -45,18 +39,22 @@ prepare_stage()
     vasprintf
     ftruncate
     getrusage
+    gettimeofday
     strsignal
     sys_resource-h
+    sys_time-h
     sys_utsname-h
     unistd-h
     uname
   '
-  $GNULIB_TOOL --lib=libgrt --source-base=src --m4-base=config/m4 --without-tests \
-    --no-vc-files --makefile-name=Makefile.gnulib --libtool \
-    --import $GNULIB_MODULES
-  WANT_AUTOCONF='2.69' WANT_AUTOMAKE='1.16' autoreconf -ifv
-  rm -rfv autom4te.cache
-  find . -name "*~" -type f -print -exec rm -rfv {} \;
+  if [ ! -f "config/m4/gnulib-cache.m4" ] || [ configure.ac -nt "config/m4/gnulib-cache.m4" ]; then
+    $GNULIB_TOOL --lib=libgrt --source-base=src --m4-base=config/m4 --without-tests \
+      --no-vc-files --makefile-name=Makefile.gnulib --libtool \
+      --import $GNULIB_MODULES
+    WANT_AUTOCONF='2.69' WANT_AUTOMAKE='1.16' autoreconf -ifv
+    rm -rfv autom4te.cache
+    find . -name "*~" -type f -print -exec rm -rfv {} \;
+  fi
 }
 
 configure_stage()
@@ -79,6 +77,8 @@ configure_stage()
   # 3. Taken care of the logic of func_resolve_sysroot() and func_replace_sysroot()
   #    in ltmain.sh, otherwise may have '-L=*' in the filed of 'dependency_libs' in
   #    *.la. So don't set --with-sysroot if --libdir has been set
+  # TODO:
+  # 1. MPI compiler can't be detected if enable option '--enable-mpi'
   AR="$ROOT_DIR/wrappers/ar-lib lib -nologo"                                   \
   CC="$ROOT_DIR/wrappers/compile cl"                                           \
   CFLAGS="$C_OPTS"                                                             \
@@ -103,12 +103,7 @@ configure_stage()
     --datarootdir="$PREFIX/share"                                              \
     --enable-static                                                            \
     --enable-shared                                                            \
-    --with-gmp="$(cygpath -u "${GMP_PREFIX:-$_PREFIX}")"                       \
-    --with-mpfr="$(cygpath -u "${MPFR_PREFIX:-$_PREFIX}")"                     \
-    --with-mpc="$(cygpath -u "${MPC_PREFIX:-$_PREFIX}")"                       \
-    --with-mpfrcx="$(cygpath -u "${MPFRCX_PREFIX:-$_PREFIX}")"                 \
-    --with-fplll="$(cygpath -u "${FPLLL_PREFIX:-$_PREFIX}")"                   \
-    --with-pari="$(cygpath -u "${PARI_PREFIX:-$_PREFIX}")"                     \
+    --enable-threads=windows                                                   \
     gl_cv_func_free_preserves_errno=yes                                        \
     lt_cv_deplibs_check_method=${lt_cv_deplibs_check_method='pass_all'}        \
     gt_cv_locale_zh_CN=none || exit 1

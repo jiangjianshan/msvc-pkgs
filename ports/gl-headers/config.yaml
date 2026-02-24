@@ -1,0 +1,6 @@
+name: gl-headers
+version: master
+url: https://gitlab.freedesktop.org/gstreamer/meson-ports/gl-headers.git
+recursive: true
+depth: 1
+script: build.bat

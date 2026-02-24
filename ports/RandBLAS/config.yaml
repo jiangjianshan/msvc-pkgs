@@ -4,8 +4,17 @@ url: https://github.com/BallisticLA/RandBLAS/archive/refs/tags/1.0.1.tar.gz
 sha256: e82e9b4de95d71cce9dad0c225e130f838f6d80b9be5ce5a77457f6b3a987d5a
 dependencies:
   required:
+    - abseil-cpp
     - blaspp
     - googletest
+    - icu4c
+    - libiconv
+    - libxml2
     - llvm-project
+    - OpenBLAS
     - random123
+    - re2
+    - xz
+    - zlib
+    - zstd
 script: build.bat

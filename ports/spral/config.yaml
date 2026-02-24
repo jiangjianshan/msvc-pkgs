@@ -5,9 +5,16 @@ sha256: 1358168ac95297049e4fc810e54a16e0c765796cfbaa156e09979e2620b7dae7
 dependencies:
   required:
     - hwloc
+    - icu4c
     - lapack
+    - libiconv
+    - libxml2
     - llvm-project
-    - METIS
     - mspcrt
+    - METIS
     - OpenBLAS
+    - pkg-config
+    - xz
+    - zlib
+    - zstd
 script: build.bat

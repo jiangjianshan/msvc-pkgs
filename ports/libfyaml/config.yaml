@@ -1,0 +1,9 @@
+name: libfyaml
+version: 0.9.4
+url: https://github.com/pantoniou/libfyaml/archive/refs/tags/v0.9.4.tar.gz
+sha256: 6eda32692fa120d86e16ac5da1368fc2f7fe54795f9c4bb3c0d2c40f01d760a8
+dependencies:
+  required:
+    - libcheck
+    - yaml
+script: build.bat

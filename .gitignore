@@ -34,18 +34,13 @@
 *.app
 
 # Untrack folders
-out/
-docs/
-go/
-logs/
-pkgs/
-sources/
-tags/
-x64/
-x86/
-releases/
+bin/
 buildtrees/
 downloads/
+docs/
+go/
+packages/
+releases/
 installed/
 
 # Vim swap files

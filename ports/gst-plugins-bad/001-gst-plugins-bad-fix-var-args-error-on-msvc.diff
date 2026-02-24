@@ -1,0 +1,39 @@
+diff -urN gst-plugins-bad-1.27.90-orig/gst/closedcaption/misc.h gst-plugins-bad-1.27.90/gst/closedcaption/misc.h
+--- gst-plugins-bad-1.27.90-orig/gst/closedcaption/misc.h	2026-01-06 04:15:10.000000000 +0800
++++ gst-plugins-bad-1.27.90/gst/closedcaption/misc.h	2026-01-31 20:48:51.199901800 +0800
+@@ -302,7 +302,7 @@
+ #define VBI_CAT_LEVEL_LOG(level,object,...) G_STMT_START{		\
+   if (G_UNLIKELY ((level) <= GST_LEVEL_MAX && (level) <= _gst_debug_min)) {						\
+ 	  gst_debug_log (libzvbi_debug, (level), __FILE__, GST_FUNCTION, __LINE__, \
+-        (GObject *) (object), __VA_ARGS__);				\
++        (GObject *) (object), ##__VA_ARGS__);				\
+   }									\
+ }G_STMT_END
+ #else
+@@ -330,19 +330,19 @@
+ 	VBI_CAT_LEVEL_LOG (GST_LEVEL_TRACE, NULL, templ , ##args)
+ #elif defined(G_HAVE_ISO_VARARGS)
+ #define error(hook, templ, ...)					\
+-	VBI_CAT_LEVEL_LOG (GST_LEVEL_ERROR, NULL, templ, __VA_ARGS__)
++	VBI_CAT_LEVEL_LOG (GST_LEVEL_ERROR, NULL, templ, ##__VA_ARGS__)
+ #define warn(hook, templ, ...)					\
+-	VBI_CAT_LEVEL_LOG (GST_LEVEL_WARNING, NULL, templ, __VA_ARGS__)
++	VBI_CAT_LEVEL_LOG (GST_LEVEL_WARNING, NULL, templ, ##__VA_ARGS__)
+ #define notice(hook, templ, ...)					\
+-	VBI_CAT_LEVEL_LOG (GST_LEVEL_INFO, NULL, templ, __VA_ARGS__)
++	VBI_CAT_LEVEL_LOG (GST_LEVEL_INFO, NULL, templ, ##__VA_ARGS__)
+ #define info(hook, templ, ...)					\
+-	VBI_CAT_LEVEL_LOG (GST_LEVEL_INFO, NULL, templ, __VA_ARGS__)
++	VBI_CAT_LEVEL_LOG (GST_LEVEL_INFO, NULL, templ, ##__VA_ARGS__)
+ #define debug1(hook, templ, ...)					\
+-	VBI_CAT_LEVEL_LOG (GST_LEVEL_DEBUG, NULL, templ, __VA_ARGS__)
++	VBI_CAT_LEVEL_LOG (GST_LEVEL_DEBUG, NULL, templ, ##__VA_ARGS__)
+ #define debug2(hook, templ, ...)					\
+-	VBI_CAT_LEVEL_LOG (GST_LEVEL_LOG, NULL, templ, __VA_ARGS__)
++	VBI_CAT_LEVEL_LOG (GST_LEVEL_LOG, NULL, templ, ##__VA_ARGS__)
+ #define debug3(hook, templ, ...)					\
+-	VBI_CAT_LEVEL_LOG (GST_LEVEL_TRACE, NULL, templ, __VA_ARGS__)
++	VBI_CAT_LEVEL_LOG (GST_LEVEL_TRACE, NULL, templ, ##__VA_ARGS__)
+ #else
+ /* if someone needs this, they can implement the inline functions for it */
+ #error "variadic macros are required"

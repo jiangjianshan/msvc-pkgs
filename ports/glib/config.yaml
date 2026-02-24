@@ -1,14 +1,15 @@
 name: glib
-version: 2.83.3
-url: https://download.gnome.org/sources/glib/2.83/glib-2.83.3.tar.xz
-sha256: d0c65318bb2e3fa594277cf98a71cffaf5f666c078db39dcec121757b2ba328d
+version: 2.87.2
+url: https://download.gnome.org/sources/glib/2.87/glib-2.87.2.tar.xz
+sha256: d6eb74a4f4ffc0b56df79ae3a939463b1d92c623f6c167d51aab24e303a851f3
 dependencies:
   required:
-    - mspcrt
-    - pkg-config
     - gettext
     - libffi
+    - libiconv
     - pcre2
+    - mspcrt
+    - pkg-config
     - zlib
   optional:
     - gobject-introspection:required

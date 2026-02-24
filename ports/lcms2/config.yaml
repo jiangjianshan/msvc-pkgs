@@ -4,8 +4,7 @@ url: https://github.com/mm2/Little-CMS/releases/download/lcms2.16/lcms2-2.16.tar
 sha256: d873d34ad8b9b4cea010631f1a6228d2087475e4dc5e763eb81acc23d9d45a51
 dependencies:
   required:
-    - openjpeg
+    - openjpeg:required
     - libtiff
     - zlib
-    - mspcrt
 script: build.sh

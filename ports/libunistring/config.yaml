@@ -5,5 +5,4 @@ sha256: f245786c831d25150f3dfb4317cda1acc5e3f79a5da4ad073ddca58886569527
 dependencies:
   required:
     - libiconv
-    - mspcrt
 script: build.sh

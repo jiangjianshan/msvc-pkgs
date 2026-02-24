@@ -1,0 +1,188 @@
+#!/bin/bash
+
+calc_prefix() {
+    local file_list="$1"
+    echo "$file_list" | awk '
+    BEGIN { prefix = "" }
+    {
+        if (prefix == "") {
+            split($0, parts, "/")
+            prefix = parts[1]
+            if (prefix != "") prefix = prefix "/"
+        } else if (prefix != "") {
+            if (index($0, prefix) != 1) {
+                prefix = ""
+            }
+        }
+    }
+    END {
+        if (prefix != "") {
+            sub("/$", "", prefix)
+        }
+        print prefix
+    }'
+}
+
+calc_strip() {
+    local prefix="${1:-}"
+    local include="${2:-}"
+    local strip_level=0
+
+    if [[ -n "$prefix" ]]; then
+        if [[ -n "$include" ]]; then
+            local trimmed_include=$(echo "$include" | sed 's#/$##')
+            local last_component=$(echo "$trimmed_include" | awk -F'/' '{print $NF}')
+            if [[ "$last_component" == *"*"* || "$last_component" == *"?"* || "$last_component" == *"."* ]]; then
+                strip_level=$(echo "$trimmed_include" | awk -F"/" '{print NF-1}')
+            else
+                strip_level=$(echo "$trimmed_include" | awk -F"/" '{print NF}')
+            fi
+        else
+            strip_level=$(echo "$prefix" | awk -F"/" '{print NF}')
+        fi
+    fi
+    echo "$strip_level"
+}
+
+unzip_strip() {
+    local archive="$1"
+    local destdir="${2:-.}"
+    local include="${3:-}"
+    local exclude="${4:-}"
+
+    mkdir -p "$destdir"
+    local file_list=$(unzip -Z -1 "$archive")
+    local prefix=$(calc_prefix "$file_list")
+    local strip_level=$(calc_strip "$prefix" "$include")
+
+    if [[ $strip_level -eq 0 ]]; then
+        if [[ -n "$include" ]]; then
+            unzip -qo "$archive" "$include" -d "$destdir"
+        elif [[ -n "$exclude" ]]; then
+            unzip -qo "$archive" -x "$exclude" -d "$destdir"
+        else
+            unzip -qo "$archive" -d "$destdir"
+        fi
+    elif [[ $strip_level -eq 1 && "$prefix" == "$(basename "$destdir")" ]]; then
+        if [[ -n "$include" ]]; then
+            unzip -qo "$archive" "$include" -d "$(dirname "$destdir")"
+        elif [[ -n "$exclude" ]]; then
+            unzip -qo "$archive" -x "$exclude" -d "$(dirname "$destdir")"
+        else
+            unzip -qo "$archive" -d "$(dirname "$destdir")"
+        fi
+    else
+        local tmpdir=$(mktemp -d)
+        if [[ -n "$include" ]]; then
+            unzip -qo "$archive" "$include" -d "$tmpdir"
+        elif [[ -n "$exclude" ]]; then
+            unzip -qo "$archive" -x "$exclude" -d "$tmpdir"
+        else
+            unzip -qo "$archive" -d "$tmpdir"
+        fi
+        find "$tmpdir" -type f | while read -r file; do
+            local relative_path="${file#$tmpdir/}"
+            local stripped_path=$(echo "$relative_path" | awk -v level="$strip_level" '
+                BEGIN { FS="/" }
+                {
+                    for (i=level+1; i<=NF; i++) {
+                        if (i > level+1) printf "/"
+                        printf "%s", $i
+                    }
+                    printf "\n"
+                }
+            ')
+            if [[ -n "$stripped_path" ]]; then
+                local target_path="$destdir/$stripped_path"
+                local target_dir=$(dirname "$target_path")
+                mkdir -p "$target_dir"
+                mv "$file" "$target_path"
+            fi
+        done
+
+        rm -rf "$tmpdir"
+    fi
+}
+
+tar_strip() {
+    local archive="$1"
+    local destdir="${2:-}"
+    local include="${3:-}"
+    local exclude="${4:-}"
+
+    local file_list=$(tar -tf "$archive")
+    local prefix=$(calc_prefix "$file_list")
+    local tar_cmd=("tar")
+
+    mkdir -p "$destdir"
+    case "$archive" in
+        *.tar.gz|*.tgz)
+            tar_cmd=("tar" "-xzf" "$archive" "-C" "$destdir")
+            ;;
+        *.tar.bz2|*.tbz|*.tbz2)
+            tar_cmd=("tar" "-xjf" "$archive" "-C" "$destdir")
+            ;;
+        *.tar.xz|*.txz)
+            tar_cmd=("tar" "-xJf" "$archive" "-C" "$destdir")
+            ;;
+        *.lz)
+            tar_cmd=("tar" "--lzip" "-xf" "$archive" "-C" "$destdir")
+            ;;
+        *.zst)
+            tar_cmd=("tar" "--zstd" "-xf" "$archive" "-C" "$destdir")
+            ;;
+        *)
+            echo "Unsupported format"
+            exit 1
+            ;;
+    esac
+
+    strip_level=$(calc_strip "$prefix" "$include")
+    if [[ $strip_level -gt 0 ]]; then
+        tar_cmd+=("--strip-components=$strip_level")
+    fi
+
+    if [[ -n "$include" ]]; then
+        tar_cmd+=("--wildcards")
+        tar_cmd+=("--no-wildcards-match-slash")
+        tar_cmd+=("$include")
+    elif [[ -n "$exclude" ]]; then
+        tar_cmd+=("--exclude=$exclude")
+    fi
+
+    "${tar_cmd[@]}"
+}
+
+extract() {
+    local archive="$1"
+    local destdir="${2:-.}"
+    local include="${3:-}"
+    local exclude="${4:-}"
+
+    if [[ -n "$include" && -n "$exclude" ]]; then
+        echo "Error: Cannot specify both include and exclude patterns" >&2
+        exit 1
+    fi
+
+    if [[ ! -f "$archive" ]]; then
+        echo "Error: Archive '$archive' not found" >&2
+        exit 1
+    fi
+    case "$archive" in
+        *.zip)
+            unzip_strip "$archive" "$destdir" "$include" "$exclude"
+            ;;
+        *)
+            tar_strip "$archive" "$destdir" "$include" "$exclude"
+            ;;
+    esac
+}
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: extract <archive> <dest> [include] [exclude]"
+    echo "Note: include and exclude patterns are mutually exclusive"
+    echo "Supported formats: .tar.gz, .tar.bz2, .tar.xz, .lz, .zip, .pkg.tar.zst"
+    exit 1
+fi
+
+extract "$(cygpath -u "$1")" "$(cygpath -u "$2")" "$3" "$4"

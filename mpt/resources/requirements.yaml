@@ -2,8 +2,9 @@ dependencies:
   - name: Visual C++ Build Tools
     url: "https://aka.ms/vs/17/release/vs_buildtools.exe"
     sha256: 5d363591aa59a4d1f04300d66e1d402bf009bfc4f7afd985c8aedcf0ffbc20f5
-    check: '"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -nologo -latest -products "*" -all -property installationVersion'
-    install: |
+    check: |
+      "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -nologo -latest -products "*" -all -property installationVersion
+    install: >
       vs_buildtools.exe --includeRecommended
       --wait
       --passive
@@ -20,42 +21,50 @@ dependencies:
       --remove Microsoft.VisualStudio.Component.TestTools.BuildTools
     restart: true
 
-  - name: Intel oneAPI Toolkits
-    interactive: true
-    variants:
+  - name: Intel oneAPI Toolkit
+    components:
       - name: Intel oneAPI DPC++/C++ Compiler Runtime for Windows
-        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/15a35578-2f9a-4f39-804b-3906e0a5f8fc/w_dpcpp_cpp_runtime_p_2024.2.1.1084.exe
-        sha256: 0c060cde2ace56e05c0336024ca15746e55aed8cf75892ef6c43749560976582
-        check: "where sycl*.dll"
+        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/47a201d7-d4cd-4079-a2d8-0e66b860aaaa/w_dpcpp_cpp_runtime_p_2025.2.1.1001.exe
+        sha256: ebec8698a742d5a17e628c685c31c0a121643517235d07ae5d47aba916db493b
+        check: |
+          where sycl*.dll
         install: |
-          w_dpcpp_cpp_runtime_p_2024.2.1.1084.exe --silent
+          w_dpcpp_cpp_runtime_p_2025.2.1.1001.exe
       - name: Intel Fortran Compiler Runtime for Windows
-        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/ea23d696-a77f-4a4a-8996-20d02cdbc48f/w_ifort_runtime_p_2024.2.1.1084.exe
-        sha256: 86c91257706458d4cfafcd527df055d1b273092e384760d93343044e848b6ec7
-        check: "where libifcoremd.dll"
+        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/0dc56e76-d2c0-4bb8-9c83-c2ee3952b855/w_ifx_runtime_p_2025.2.1.1001.exe
+        sha256: bcf12069e8ab987d012f196d034b0e70d3eae099d8ee6512b55f901d44a2f8d1
+        check: |
+          where libifcoremd.dll
         install: |
-          w_ifort_runtime_p_2024.2.1.1084.exe --silent
-      - name: Intel oneAPI BaseKit
-        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/d91caaa0-7306-46ea-a519-79a0423e1903/w_BaseKit_p_2024.2.1.101_offline.exe
-        sha256: edb3b687d334937f68347750c155a30a3ff69ed8ca0194e2a253276e81f099da
-        check: "if exist \"%ProgramFiles(x86)%\\Intel\\oneAPI\\compiler\\2024.2\\bin\\icx-cl.exe\" (exit 0) else (exit 1)"
+          w_ifx_runtime_p_2025.2.1.1001.exe
+      - name: Intel oneAPI DPC++/C++ Compiler
+        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/0f85f30e-7b8b-4ad6-8465-8cbc6048525d/intel-dpcpp-cpp-compiler-2025.3.1.15_offline.exe
+        sha256: 98834b39aeab3499d01b7dec033ed8481846fe21f6ff84d895fa209102c2db08
+        check: |
+          if exist "%ProgramFiles(x86)%\\Intel\\oneAPI\\compiler\\latest\\bin\\dpcpp.exe" (exit 0) else (exit 1)
         install: |
-          w_BaseKit_p_2024.2.1.101_offline.exe -a --silent --eula accept
-          --components intel.oneapi.win.cpp-dpcpp-common
-      - name: Intel oneAPI HPCKit
-        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/745e923a-3f85-4e1e-b6dd-637c0e9ccba6/w_HPCKit_p_2024.2.1.80_offline.exe
-        sha256: 4cd16d89bff0f5c3ad1cab0661941b644e54dd7c76e2a03f62e8dfbc0b61d107
-        check: "if exist \"%ProgramFiles(x86)%\\Intel\\oneAPI\\compiler\\2024.2\\bin\\ifort.exe\" (exit 0) else (exit 1)"
+          intel-dpcpp-cpp-compiler-2025.3.1.15_offline.exe
+      - name: Intel Fortran Compiler
+        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/79e069e4-f844-43df-8d73-3674c024b043/intel-fortran-compiler-2025.3.1.15_offline.exe
+        sha256: c75dd405b39d877c452f4f61bda2e8600b240c825f5082dc3e9749eccd01c427
+        check: |
+          if exist "%ProgramFiles(x86)%\\Intel\\oneAPI\\compiler\\latest\\bin\\ifx.exe" (exit 0) else (exit 1)
         install: |
-          w_HPCKit_p_2024.2.1.80_offline.exe -a --silent --eula accept
-          --components intel.oneapi.win.cpp-dpcpp-common:intel.oneapi.win.ifort-compiler:intel.oneapi.win.mpi.devel
+          intel-fortran-compiler-2025.3.1.15_offline.exe
+      - name: Intel MPI Library
+        url: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/ff3a6b8a-fff0-487f-b888-edeac9ea2eca/intel-mpi-2021.17.1.14_offline.exe
+        sha256: 33e4275254c9dbfdb26f2a8febc7ea1595687c04c771f64ea1c4c1f8eab48f23
+        check: |
+          if exist "%ProgramFiles(x86)%\\Intel\\oneAPI\\mpi\\latest\\lib\\impi.lib" (exit 0) else (exit 1)
+        install: |
+          intel-mpi-2021.17.1.14_offline.exe
 
   - name: CUDA Toolkit
     url: https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda_12.9.1_576.57_windows.exe
     sha256: f0ca7cc7b4cea2fac2c4951819d2a9caea31e04000e9110e2048719525f8ea0e
-    check: "nvcc --version"
-    interactive: true
-    install: |
+    check: |
+      nvcc --version
+    install: >
       cuda_12.9.1_576.57_windows.exe -s -n
       cublas_12.9 cublas_dev_12.9
       cuda_profiler_api_12.9
@@ -86,39 +95,45 @@ dependencies:
       visual_profiler_12.9
       visual_studio_integration_12.9
     restart: true
-    extensions:
-      - name: cuDNN
-        url: https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-9.13.0.50_cuda12-archive.zip
-        sha256: 827e294e13e352586a5bcf5b2188025fe5cba590df69b8010e97dd30b9a0266f
-        check: "if exist \"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.9\\bin\\cudnn64_9.dll\" (exit 0) else (exit 1)"
-        target: "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.9"
-
-  - name: meson
-    check: "meson --version"
-    install: "python -m pip install meson"
 
   - name: ninja
     url: https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-win.zip
     sha256: 07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65
-    check: "where ninja"
-    target: "{ROOT_DIR}\\installed\\x64-windows\\bin"
+    check: |
+      where ninja
+    target: "%ROOT_DIR%\\bin"
 
   - name: wget
-    check: "where wget"
-    interactive: true
+    check: |
+      where wget
     variants:
       - name: wget x64 variant
         url: https://eternallybored.org/misc/wget/1.21.4/64/wget.exe
         sha256: 6136e66e41acd14c409c2d3eb10d48a32febaba04267303d0460ed3bee746cc5
-        target: "{ROOT_DIR}\\installed\\x64-windows\\bin\\wget.exe"
+        target: "%ROOT_DIR%\\bin\\wget.exe"
       - name: wget x86 variant
         url: https://eternallybored.org/misc/wget/1.21.4/32/wget.exe
         sha256: 7c722c4a25a26f7179027b1323ed8e291c48365c6f87345e61ee8d5ebd2e5ba0
-        target: "{ROOT_DIR}\\installed\\x86-windows\\bin\\wget.exe"
+        target: "%ROOT_DIR%\\bin\\wget.exe"
+
+  - name: Zstandard 
+    check: |
+      if exist "%GIT_ROOT%\\usr\\bin\\zstd.exe" (exit 0) else (exit 1)
+    variants:
+      - name: Zstandard x64 variant
+        url: https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-v1.5.7-win64.zip
+        sha256: acb4e8111511749dc7a3ebedca9b04190e37a17afeb73f55d4425dbf0b90fad9
+        include: "zstd-v1.5.7-win64/zstd.exe"
+        target: "%GIT_ROOT%\\usr\\bin"
+      - name: Zstandard x86 variant
+        url: https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-v1.5.7-win32.zip
+        sha256: 231265caed189d933339cda2352e0905ae9076b43c534ba24f84fbab8f719a2d
+        include: "zstd-v1.5.7-win32/zstd.exe"
+        target: "%GIT_ROOT%\\usr\\bin"
 
   - name: rust
-    check: "where rustc"
-    interactive: true
+    check: |
+      where rustc
     variants:
       - name: rust x64 variant
         url: https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe
@@ -132,10 +147,11 @@ dependencies:
         install: |
           rustup-init.exe
           rustup default stable-msvc
+    restart: true
 
   - name: cmake
-    check: "where cmake"
-    interactive: true
+    check: |
+      where cmake
     variants:
       - name: cmake x64 variant
         url: https://cmake.org/files/v3.31/cmake-3.31.9-windows-x86_64.msi
@@ -147,10 +163,11 @@ dependencies:
         sha256: bc062589c6b9e964733b0390e89154eecd9617f524c7092be43d42fb824f5a16
         install: |
           cmake-3.31.9-windows-i386.msi
+    restart: true
 
   - name: go
-    check: "where go"
-    interactive: true
+    check: |
+      where go
     variants:
       - name: go x64 variant
         url: https://go.dev/dl/go1.25.4.windows-amd64.msi
@@ -162,189 +179,219 @@ dependencies:
         sha256: f47eef5731606dc5ef0b59a9a2f7ae90f3b0843f54dc510c1d82900cd9bfa0b5
         install: |
           go1.25.4.windows-386.msi
-
-  - name: git
-    url: https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/Git-2.52.0-64-bit.exe
-    sha256: d8de7a3152266c8bb13577eab850ea1df6dccf8c2aa48be5b4a1c58b7190d62c
-    check: "where git"
-    install: |
-      Git-2.52.0-64-bit.exe
     restart: true
-    extensions:
+
+  - name: Git for Windows - Additional MSYS2 utilities"
+    components:
       - name: autoconf2.13
         url: https://mirror.msys2.org/msys/x86_64/autoconf2.13-2.13-6-any.pkg.tar.zst
         sha256: 38bd817375f053b6d939f80a30582d05bc6ed5cd07db135e7f3120a27f1b9512
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\autoconf-2.13\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\autoconf-2.13" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: autoconf2.69
         url: https://mirror.msys2.org/msys/x86_64/autoconf2.69-2.69-4-any.pkg.tar.zst
         sha256: 56b2de8e53e46a88bb217a427c2f7b5671ac6400148681fb2089e9b7be817364
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\autoconf-2.69\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\autoconf-2.69" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: autoconf2.71
-        url: https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst
-        sha256: 40ccdab38848766c00b417a2c424fd5aa6e20f05dd6e50e9aa02c78c2766eb80
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\autoconf-2.71\" (exit 0) else (exit 1)"
+        url: https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-4-any.pkg.tar.zst
+        sha256: 55be2b911beaa0424d60fdcf206f2411a0eb24cb53e66a82964497ef8a4faac0
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\autoconf-2.71" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: autoconf2.72
-        url: https://mirror.msys2.org/msys/x86_64/autoconf2.72-2.72-1-any.pkg.tar.zst
-        sha256: 740b1de1dcb89c64f0ac1cd8591ae1b822f53600ab5fbf28e9ab8d0d21a05857
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\autoconf-2.72\" (exit 0) else (exit 1)"
-      - name: autoconf-wrapper
-        url: https://mirror.msys2.org/msys/x86_64/autoconf-wrapper-20250528-1-any.pkg.tar.zst
-        sha256: 6fae49791986ceee678e7073bd9d02867d5219f9c6a8d87234d8603543eda13e
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\autoconf\" (exit 0) else (exit 1)"
+        url: https://mirror.msys2.org/msys/x86_64/autoconf2.72-2.72-3-any.pkg.tar.zst
+        sha256: e11d605053e8f059e503d163c2a87724ef15e50463fccd6e7802ffc7129d7b8e
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\autoconf-2.72" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: autoconf-archive
         url: https://mirror.msys2.org/msys/x86_64/autoconf-archive-2024.10.16-1-any.pkg.tar.zst
         sha256: 0c3620d40a546b7210c0bacff2c5aa34de3ce3d8b2c7fefcb719fceefd7da9d9
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\aclocal\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\aclocal" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
+      - name: autoconf-wrapper
+        url: https://mirror.msys2.org/msys/x86_64/autoconf-wrapper-20250528-1-any.pkg.tar.zst
+        sha256: 6fae49791986ceee678e7073bd9d02867d5219f9c6a8d87234d8603543eda13e
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\autoconf" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake1.11
         url: https://mirror.msys2.org/msys/x86_64/automake1.11-1.11.6-6-any.pkg.tar.zst
         sha256: 25ecc6296e1416513153c290442cbca6dcb813c1c50e5beb3a708408ba5de3a5
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\automake-1.11\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\automake-1.11" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake1.12
         url: https://mirror.msys2.org/msys/x86_64/automake1.12-1.12.6-6-any.pkg.tar.zst
         sha256: b6c91241999c6ff8d04c5ea8011b10544a373b01eacb7993c66db99e5f4fb373
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\automake-1.12\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\automake-1.12" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake1.13
         url: https://mirror.msys2.org/msys/x86_64/automake1.13-1.13.4-7-any.pkg.tar.zst
         sha256: a0d3eb1b359a67c1c8a9161cf79ba681cccabf47c78cb40d3065b5eff02a82f0
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\automake-1.13\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\automake-1.13" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake1.14
         url: https://mirror.msys2.org/msys/x86_64/automake1.14-1.14.1-6-any.pkg.tar.zst
         sha256: 0b097559c1fa79124552334b63d13417bcec8a08008ab65f77d27300a4ccc5b4
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\automake-1.14\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\automake-1.14" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake1.15
         url: https://mirror.msys2.org/msys/x86_64/automake1.15-1.15.1-4-any.pkg.tar.zst
         sha256: e3c73d0094eebbc2353b2ddd0b7c81020917c2ec09d3e4967d7abc9794fa7843
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\automake-1.15\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\automake-1.15" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake1.16
         url: https://mirror.msys2.org/msys/x86_64/automake1.16-1.16.5-1-any.pkg.tar.zst
         sha256: 1963b5fa0ab5eaf1bdc311501cd742c6bb19941e831dcc8ab1e51a8c7f1634fe
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\automake-1.16\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\automake-1.16" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake1.17
         url: https://mirror.msys2.org/msys/x86_64/automake1.17-1.17-1-any.pkg.tar.zst
         sha256: bb069dbb6f580c2346d2f6d74268b5e12e625f7ba57299426f9cd6c0fa714191
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\automake-1.17\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\automake-1.17" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake1.18
         url: https://mirror.msys2.org/msys/x86_64/automake1.18-1.18.1-1-any.pkg.tar.zst
         sha256: c045d9eddf900dbacae06d9e0e19e250cc32d849def7d06b833253f85e3fc941
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\share\\automake-1.18\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\share\\automake-1.18" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: automake-wrapper
         url: https://mirror.msys2.org/msys/x86_64/automake-wrapper-20250528-1-any.pkg.tar.zst
         sha256: c82643326a35605b98e5b5da35aec846ca38d2b08f390ce13077ad1fa96e79e4
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\automake\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\automake" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: bison
         url: https://mirror.msys2.org/msys/x86_64/bison-3.8.2-5-x86_64.pkg.tar.zst
         sha256: 7439ca784a9909e0730a513d3aff15852c3b292ac85053fa2dd7a2a19c1ce04c
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\bison.exe\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\bison.exe" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: flex
-        url: https://mirror.msys2.org/msys/x86_64/flex-2.6.4-3-x86_64.pkg.tar.zst
-        sha256: 6ee24cb84a157617f86fabdd342c7f883cca3cd2c58cf85b2106710375325a2c
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\flex.exe\" (exit 0) else (exit 1)"
+        url: https://mirror.msys2.org/msys/x86_64/flex-2.6.4-4-x86_64.pkg.tar.zst
+        sha256: d70fbf25d0dea3cb8ae42670b79a8ba65a48daa140137367b5ebaf37eb48df26
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\flex.exe" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: gcc-libs
         url: https://mirror.msys2.org/msys/x86_64/gcc-libs-15.2.0-1-x86_64.pkg.tar.zst
         sha256: d77e7228e596283cb5fbdcba67bbf9c3abd4bc3e21fc225a9752c0c8cdc8b91d
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-stdc++-6.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-stdc++-6.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: gperf
-        url: https://mirror.msys2.org/msys/x86_64/gperf-3.1-6-x86_64.pkg.tar.zst
-        sha256: 393a048d6eb490e572951df7a99e0548cf064703adce365f960f3c0b45996256
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\gperf.exe\" (exit 0) else (exit 1)"
-      - name: gettext
-        url: https://mirror.msys2.org/msys/x86_64/gettext-0.22.5-1-x86_64.pkg.tar.zst
-        sha256: b31ab065c3538ecb1fb6ab48ab2b3049243d6d9e585331c882f38326eefc1831
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\gettext.exe\" (exit 0) else (exit 1)"
+        url: https://mirror.msys2.org/msys/x86_64/gperf-3.3-1-x86_64.pkg.tar.zst
+        sha256: e30b01280ea80cbe0de099ba9c94389faa1f6cb51bee9f35f16883bf0ee384e3
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\gperf.exe" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: help2man
         url: https://mirror.msys2.org/msys/x86_64/help2man-1.49.3-1-x86_64.pkg.tar.zst
         sha256: 2a97824b57f23ba042cd0087fce2b05d9f54f371b2ab7d6f1ef656250d7dc46d
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\help2man\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\help2man" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: libasprintf
         url: https://mirror.msys2.org/msys/x86_64/libasprintf-0.22.5-1-x86_64.pkg.tar.zst
         sha256: fdd59ae72d355ae1c5615f12429493611782f3e38bf1f7ca9ca83b61fcfb6c26
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-asprintf-0.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-asprintf-0.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: libgettextpo
         url: https://mirror.msys2.org/msys/x86_64/libgettextpo-0.22.5-1-x86_64.pkg.tar.zst
         sha256: a9f3ef6b3712e20f0dc6eecaf8c2ec6aff5f259b2dbe87422a0aaca7b27c98d5
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-gettextpo-0.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-gettextpo-0.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: libtool
-        url: https://mirror.msys2.org/msys/x86_64/libtool-2.5.4-1-x86_64.pkg.tar.zst
-        sha256: 82a635ac6a9b6b0bed8866e9a07f95296f53c7c4652ce4a55e713c8a6096a933
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\libtool\" (exit 0) else (exit 1)"
+        url: https://mirror.msys2.org/msys/x86_64/libtool-2.5.4-4-x86_64.pkg.tar.zst
+        sha256: c8e812a9a32dd86c53d6e9bd5ec94977a5fc66d2ce3e691d92196aa06f616775
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\libtool" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
         patch:
           - libtool.diff
       - name: libltdl
         url: https://mirror.msys2.org/msys/x86_64/libltdl-2.5.4-4-x86_64.pkg.tar.zst
         sha256: cc2d1a21088e108c5fd3390b37fd7cc5d10b33596d5200f95483b684491da203
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-ltdl-7.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-ltdl-7.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: liblz4
         url: https://mirror.msys2.org/msys/x86_64/liblz4-1.10.0-1-x86_64.pkg.tar.zst
         sha256: 1cbbe51ee91bf32691aabb15bdb7c8548e8b5ef8195122ef31f10edcca6e952f
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-lz4-1.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-lz4-1.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: libxcrypt
         url: https://mirror.msys2.org/msys/x86_64/libxcrypt-4.5.2-1-x86_64.pkg.tar.zst
         sha256: e63db0aa2b708359e25f61f506e2d2c92c315febf5f88cc9f386e4ec0bdf4fa5
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-crypt-2.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-crypt-2.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: libxxhash
         url: https://mirror.msys2.org/msys/x86_64/libxxhash-0.8.3-1-x86_64.pkg.tar.zst
         sha256: fbe21b886bb1e3895a081ce84122062eef88e8b39affcba3a6863cdff21c73b8
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-xxhash-0.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-xxhash-0.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: libzstd
         url: https://mirror.msys2.org/msys/x86_64/libzstd-1.5.7-1-x86_64.pkg.tar.zst
         sha256: 5e370b2e725a0a7e5ff58d84653c9a0cd5a10b9cfe930f2d949a28ad2a11c1f2
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-zstd-1.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-zstd-1.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: m4
         url: https://mirror.msys2.org/msys/x86_64/m4-1.4.19-2-x86_64.pkg.tar.zst
         sha256: 4a1d296571afa7b8837fd5e227e16c9cb7e26c0f31f03b364e11c1ae8ee2a913
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\m4.exe\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\m4.exe" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: make
         url: https://mirror.msys2.org/msys/x86_64/make-4.4.1-2-x86_64.pkg.tar.zst
         sha256: 2408af61717dae87b00c855b132769a125c708907fc94a46bb16dae076113e5c
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\make.exe\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\make.exe" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: perl
         url: https://mirror.msys2.org/msys/x86_64/perl-5.40.3-1-x86_64.pkg.tar.zst
         sha256: 48a87fd3d9a0c3c1b47bd8097f694233a90e0f53b71872458301c380f6dddb3b
-        target: "{GIT_ROOT}"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\msys-perl5_40.dll\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\msys-perl5_40.dll" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: perl-Locale-Gettext
         url: https://mirror.msys2.org/msys/x86_64/perl-Locale-Gettext-1.07-12-x86_64.pkg.tar.zst
         sha256: a86bd0c6b64fc441d14799373c3444932f150857e26b17f3a9e03748ac68ac90
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\lib\\perl5\\vendor_perl\\Locale\\gettext.pm\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\lib\\perl5\\vendor_perl\\Locale\\gettext.pm" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: pkgconf
         url: https://mirror.msys2.org/msys/x86_64/pkgconf-2.5.1-1-x86_64.pkg.tar.zst
         sha256: 38efd4928ac0cb06e9bd558baa533fc923c0592115bf9bd44970250f3ae2cb7e
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\pkgconf.exe\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\pkgconf.exe" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
       - name: texinfo
         url: https://mirror.msys2.org/msys/x86_64/texinfo-7.2-2-x86_64.pkg.tar.zst
         sha256: 7c166df27fc3361fff71ae4b252a941839d60a7025a38d862b80765e05a15a29
-        target: "{GIT_ROOT}\\usr"
-        check: "if exist \"{GIT_ROOT}\\usr\\bin\\makeinfo\" (exit 0) else (exit 1)"
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\makeinfo" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"
+      - name: xz
+        url: https://mirror.msys2.org/msys/x86_64/xz-5.8.2-1-x86_64.pkg.tar.zst
+        sha256: 2baf810fb0211b09ae49726cee3f28bbb2c24e3aede1773c904bfa7497076fc5
+        check: |
+          if exist "%GIT_ROOT%\\usr\\bin\\xz.exe" (exit 0) else (exit 1)
+        target: "%GIT_ROOT%\\usr"

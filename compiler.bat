@@ -119,17 +119,19 @@ set remain=%PREFIX_PATH%
 :loop
 for /f "tokens=1* delims=;" %%a in ("%remain%") do (
   if exist "%%a\include" set "INCLUDE=%%a\include;!INCLUDE!"
-  if exist "%%a\lib" set "LIB=%%a\lib;!LIB!"
+  if exist "%%a\lib" (
+    set "LD_LIBRARY_PATH=%%a\lib;!LD_LIBRARY_PATH!"
+    set "LIB=%%a\lib;!LIB!"
+    set "LIBRARY_PATH=%%a\lib;!LIBRARY_PATH!"
+    set "LTDL_LIBRARY_PATH=%%a\lib;!LTDL_LIBRARY_PATH!"
+  )
   if exist "%%a\lib\cmake" set "CMAKE_PREFIX_PATH=%%a;!CMAKE_PREFIX_PATH!"
   if exist "%%a\lib\pkgconfig" set "PKG_CONFIG_PATH=%%a\lib\pkgconfig;!PKG_CONFIG_PATH!"
+  if exist "%%a\share\pkgconfig" set "PKG_CONFIG_PATH=%%a\share\pkgconfig;!PKG_CONFIG_PATH!"
   set remain=%%b
 )
 if defined remain goto :loop
 
-rem The unix tools may be need for some libraries
-for /f "delims=" %%i in ('where git.exe') do set GIT_ROOT=%%i
-set "BASH_ROOT=!GIT_ROOT:~0,-12!\usr\bin"
-set "PATH=%PATH%;!BASH_ROOT!"
 goto :end
 
 :parse_loop

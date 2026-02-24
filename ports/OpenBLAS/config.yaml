@@ -4,7 +4,12 @@ url: https://github.com/OpenMathLib/OpenBLAS/archive/refs/tags/v0.3.30.tar.gz
 sha256: 27342cff518646afb4c2b976d809102e368957974c250a25ccc965e53063c95d
 dependencies:
   required:
+    - icu4c
+    - libiconv
+    - libxml2
     - llvm-project
-    - mspcrt
     - perl
+    - xz
+    - zlib
+    - zstd
 script: build.bat

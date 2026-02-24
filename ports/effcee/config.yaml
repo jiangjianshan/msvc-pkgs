@@ -3,7 +3,7 @@ version: main
 url: https://github.com/google/effcee.git
 recursive: false
 depth: 1
-extras:
+components:
   - name: abseil_cpp
     version: master
     url: https://github.com/abseil/abseil-cpp.git
@@ -27,5 +27,4 @@ dependencies:
     - abseil-cpp
     - googletest
     - re2
-    - mspcrt
 script: build.bat

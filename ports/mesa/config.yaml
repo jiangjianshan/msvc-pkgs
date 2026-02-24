@@ -1,13 +1,21 @@
 name: mesa
-version: 25.3.3
-url: https://archive.mesa3d.org/mesa-25.3.3.tar.xz
-sha256: 05328b3891c000e6a110a3e7321d8bfbb21631d132bf86bd3d4a8f45c535ef6b
+version: 25.3.4
+url: https://archive.mesa3d.org/mesa-25.3.4.tar.xz
+sha256: 3a0fc6ec070b45ae25dc2ccb5e52fae1d89141f7c39c4a91fe4eaa80dfff9deb
 dependencies:
   required:
-    - pkg-config
     - DirectX-Headers
     - freeglut
-    - llvm-project
-    - winflexbison
+    - icu4c
+    - libiconv
+    - libxml2
     - libva
+    - llvm-project
+    - lua
+    - mspcrt
+    - pkg-config
+    - SPIRV-Tools
+    - winflexbison
+    - zlib
+    - zstd
 script: build.bat

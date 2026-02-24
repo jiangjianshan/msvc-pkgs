@@ -1,8 +1,5 @@
 name: marst
-version: '2.8'
+version: 2.8
 url: https://ftp.gnu.org/gnu/marst/marst-2.8.tar.gz
 sha256: d77f4703b0b44b50be57908f9d556ee6c3bedd97d638c42949d6aec84f8070ba
-dependencies:
-  required:
-    - mspcrt
 script: build.sh

@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
 
-# Calculate the root directory path
-ROOT_DIR = Path(__file__).parent.parent
+_root_dir = os.getenv('ROOT_DIR')
+if _root_dir:
+    root_dir = Path(_root_dir)
+else:
+    root_dir = Path(__file__).parent.parent
 
-# Export variable to make it available for import by other modules
-__all__ = ['ROOT_DIR']
+__all__ = ['root_dir']

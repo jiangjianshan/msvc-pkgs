@@ -1,14 +1,21 @@
 name: gst-plugins-base
-version: 1.27.2
-url: https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.27.2.tar.xz
-sha256: 6f530a0eac4fe3a8e5487c3eea7b1fac307e2a21f056d9b41747818a88be4bf6
+version: 1.27.90
+url: https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.27.90.tar.xz
+sha256: 30c8e6f98274717efaaa8f54e3700d72c1ba8977678c38f15b51c6006bfad12f
 dependencies:
   required:
-    - pkg-config
-    - mspcrt
     - gettext
+    - gdk-pixbuf
+    - gtk3
     - glib
+    - gl-headers
     - gobject-introspection
-    - OpenCL-Headers
     - gstreamer
+    - iso-codes
+    - libffi
+    - libiconv
+    - mspcrt
+    - pcre2
+    - pkg-config
+    - zlib
 script: build.bat

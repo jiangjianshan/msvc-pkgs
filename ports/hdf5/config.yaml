@@ -6,7 +6,7 @@ dependencies:
   required:
     - libaec
     - perl
+    - mspcrt
     - pkg-config
     - zlib
-    - mspcrt
 script: build.bat

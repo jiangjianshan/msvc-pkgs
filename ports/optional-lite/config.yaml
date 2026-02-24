@@ -2,5 +2,4 @@ name: optional-lite
 version: 3.6.0
 url: https://github.com/nonstd-lite/optional-lite/archive/refs/tags/v3.6.0.tar.gz
 sha256: 2be17fcfc764809612282c3e728cabc42afe703b9dc333cc87c48d882fcfc2c2
-dependencies:
 script: build.bat

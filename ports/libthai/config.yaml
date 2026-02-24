@@ -1,10 +1,9 @@
 name: libthai
-version: 0.1.29
-url: https://github.com/tlwg/libthai/archive/refs/tags/v0.1.29.tar.gz
-sha256: 75b001487322bc8017f4c1d61bbe5d59212b60a24e8794f590b1af910ae20041
+version: 0.1.30
+url: https://github.com/tlwg/libthai/archive/refs/tags/v0.1.30.tar.gz
+sha256: d7d16c155d2f7561ba9eb1b2d8d68647f4ea0d870b5d2a26a5d421c8ed561667
 dependencies:
   required:
-    - mspcrt
+    - libiconv
     - libdatrie
-    - llvm-project
 script: build.sh

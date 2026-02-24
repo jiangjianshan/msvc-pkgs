@@ -1,0 +1,41 @@
+name: gtk3
+version: 3.24.51
+url: https://download.gnome.org/sources/gtk/3.24/gtk-3.24.51.tar.xz
+sha256: 0013877c6bd23c2dbe42ad7c70a053d0e449be66736574e37867c49c5f905a4f
+dependencies:
+  required:
+    - atk
+    - brotli
+    - bzip2
+    - cairo
+    - expat
+    - fontconfig
+    - freeglut
+    - freetype
+    - fribidi
+    - gettext
+    - gdk-pixbuf
+    - glib
+    - gobject-introspection
+    - graphene
+    - gstreamer
+    - harfbuzz
+    - iso-codes
+    - libdatrie
+    - libepoxy
+    - libffi
+    - libiconv
+    - libjpeg-turbo
+    - libpng
+    - libsass
+    - libthai
+    - libtiff
+    - mesa
+    - mspcrt
+    - pango
+    - pcre2
+    - pixman
+    - pkg-config
+    - sassc
+    - zlib
+script: build.bat

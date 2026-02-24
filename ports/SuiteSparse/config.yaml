@@ -5,10 +5,14 @@ sha256: 794ae22f7e38e2ac9f5cbb673be9dd80cdaff2cdf858f5104e082694f743b0ba
 dependencies:
   required:
     - gmp
+    - icu4c
+    - libiconv
+    - libxml2
     - llvm-project
     - lz4
     - mpfr
-    - mspcrt
     - OpenBLAS
+    - xz
+    - zlib
     - zstd
 script: build.bat

@@ -5,6 +5,5 @@ sha256: c3a0a9ece8932e31c3b736e2db18b1c42e7070cd9b881388b26d01aa71e24ca2
 dependencies:
   required:
     - abseil-cpp
-    - mspcrt
     - zlib
 script: build.bat

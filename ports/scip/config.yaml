@@ -4,11 +4,17 @@ url: https://www.scipopt.org/download/release/scip-9.2.1.tgz
 sha256: d22982b1f31e44b111a673acd8250f093c7291303427392a0a8a253738a08258
 dependencies:
   required:
-    - pkg-config
+    - boost
+    - Clp
+    - gmp
+    - Ipopt
+    - mpfr
+    - mspcrt
     - papilo
+    - pkg-config
+    - readline
     - soplex
+    - ThirdParty-Mumps
     - zimpl
     - zlib
-    - Ipopt
-    - mspcrt
 script: build.bat

@@ -8,6 +8,5 @@ dependencies:
     - freeglut
     - libpng
     - libjpeg-turbo
-    - mspcrt
     - zlib
 script: build.bat

@@ -4,13 +4,18 @@ url: https://github.com/doxygen/doxygen/archive/refs/tags/Release_1_12_0.tar.gz
 sha256: 5ca35e1258020df5fe8b21c3656aed156c317def4a81b7fe52f452edc9f35768
 dependencies:
   required:
-    - pkg-config
     - fmt
+    - icu4c
+    - libiconv
+    - libxml2
     - llvm-project
+    - mspcrt
+    - pkg-config
     - sqlite
     - spdlog
     - xapian-core
-    - zlib
-    - mspcrt
     - winflexbison
+    - xz
+    - zlib
+    - zstd
 script: build.bat

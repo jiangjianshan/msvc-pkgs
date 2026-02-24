@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-File download handler with robust retry mechanisms and progress tracking.
-Provides comprehensive error handling and resume support for HTTP downloads.
-
-Copyright (c) 2024 Jianshan Jiang
-
-"""
+#
+#  Copyright (c) 2024 Jianshan Jiang
+#
 import os
 import random
 import requests
@@ -47,46 +43,6 @@ class DownloadHandler:
     _expected_size = None
     _supports_partial = None
 
-    @classmethod
-    def _log_request_and_response(cls, response):
-        """
-        Log detailed HTTP request and response information in formatted tables.
-        """
-        cls._print_headers_table("Actual Request Headers", response.request.headers)
-        cls._print_headers_table("Server Response Headers", response.headers)
-        RichLogger.debug(f"HTTP version: [bold cyan]{response.raw.version}[/bold cyan], "
-                     f"Status code: [bold cyan]{response.status_code}[/bold cyan], "
-                     f"Reason: [bold cyan]{response.reason}[/bold cyan]")
-
-        # Log redirect history if any
-        if response.history:
-            RichLogger.info(f"Found [bold cyan]{len(response.history)}[/bold cyan] redirects")
-            redirect_table = RichTable.create(title="[bold]Redirect History[/bold]")
-            redirect_table.add_column("Step", style="dim", width=5)
-            redirect_table.add_column("Status", style="bold", width=10)
-            redirect_table.add_column("URL", style="bold cyan")
-            for i, redirect in enumerate(response.history):
-                redirect_table.add_row(
-                    str(i + 1),
-                    str(redirect.status_code),
-                    redirect.url
-                )
-            RichTable.render(redirect_table)
-        RichLogger.info(f"Final URL: [bold cyan]{response.url}[/bold cyan]")
-
-    @classmethod
-    def _print_headers_table(cls, title, headers):
-        """
-        Display HTTP headers in a formatted table with truncation for long values.
-        """
-        table = RichTable.create(title=f"[bold]{title}[/]")
-        table.add_column("Header", style="bold cyan", no_wrap=True)
-        table.add_column("Value", style="green")
-
-        for key, value in headers.items():
-            display_value = value if len(value) < 80 else value[:77] + "..."
-            table.add_row(key, display_value)
-        RichTable.render(table)
 
     @classmethod
     def download_file(cls, url, file_path, verify_ssl=False):
@@ -149,37 +105,15 @@ class DownloadHandler:
                         allow_redirects=True,
                         verify=verify_ssl
                     ) as response:
-                        # Log request/response details
-                        cls._log_request_and_response(response)
-
-                        # Check if server uses chunked encoding (disables resume)
-                        is_chunked = ('Transfer-Encoding' in response.headers and
-                                     response.headers.get('Transfer-Encoding', '').lower() == 'chunked')
-                        if is_chunked:
-                            RichLogger.warning("Server uses chunked encoding - resume functionality disabled")
-                            # For chunked encoding, force restart download
+                        cls._supports_partial = cls._is_partial(response)
+                        if not cls._supports_partial:
                             if downloaded_size > 0:
                                 RichLogger.debug("Deleting partial file due to chunked encoding")
                                 FileUtils.delete_file(file_path)
                                 # Reset downloaded size after deletion
                                 downloaded_size = 0
-                            # Override partial support detection
-                            cls._supports_partial = False
-                        else:
-                            # Normal detection for non-chunked responses
-                            cls._supports_partial = cls._is_partial(response)
-
-                        # Update class variables with response information
                         cls._expected_size = cls._get_expected_size(response)
-                        cls._supports_partial = cls._is_partial(response)
-
                         response.raise_for_status()
-                        # Get expected file size
-                        if cls._expected_size:
-                            RichLogger.debug(f"Expected file size: "
-                                         f"[bold cyan]{cls._format_bytes(cls._expected_size, plain=True)}[/bold cyan]")
-
-                        # Determine file mode based on response status
                         file_mode = 'wb'
                         if response.status_code == requests.codes.ok:
                             if downloaded_size > 0:
@@ -264,13 +198,12 @@ class DownloadHandler:
                                 f"[bold cyan]{cls.MAX_RETRIES}[/bold cyan])")
                     time.sleep(wait_time)
 
+        if not success:
+            RichLogger.error(f"Failed to download [bold cyan]{file_path.name}[/bold cyan]")
         return success
 
     @classmethod
     def _get_expected_size(cls, response):
-        """
-        Extract the expected file size from HTTP response headers using multiple strategies.
-        """
         # If chunked encoding is used, cannot determine total file size
         if 'Transfer-Encoding' in response.headers and response.headers.get('Transfer-Encoding', '').lower() == 'chunked':
             RichLogger.debug("Chunked encoding detected, cannot determine total file size")
@@ -319,6 +252,7 @@ class DownloadHandler:
         RichLogger.debug("No file size information found in response headers")
         return None
 
+
     @classmethod
     def _is_partial(cls, response):
         """
@@ -340,6 +274,7 @@ class DownloadHandler:
         RichLogger.debug(f"Server supports partial content: [bold cyan]{supports_partial}[/bold cyan]")
         return supports_partial
 
+
     @classmethod
     def _get_download_size(cls, file_path):
         """
@@ -351,6 +286,7 @@ class DownloadHandler:
             return size
         RichLogger.debug("File does not exist, starting from 0 bytes")
         return 0
+
 
     @classmethod
     def _get_content(cls, response, file_path, file_mode, progress, task, resume_position, expected_size):
@@ -373,6 +309,7 @@ class DownloadHandler:
             progress.update(task, completed=expected_size)
         return True
 
+
     @classmethod
     def _get_wget_headers(cls):
         """
@@ -385,6 +322,7 @@ class DownloadHandler:
             'Connection': "Keep-Alive",
         }
         return headers
+
 
     @classmethod
     def _create_progress_bar(cls):
@@ -406,26 +344,3 @@ class DownloadHandler:
             expand=True,
             transient=True
         )
-
-    @classmethod
-    def _format_bytes(cls, size, plain=False):
-        """
-        Convert byte count into human-readable format with appropriate units.
-        """
-        if size is None or size <= 0:
-            return "0B"
-        units = ['B', 'KB', 'MB', 'GB', 'TB']
-        i = 0
-        while size >= 1024 and i < len(units) - 1:
-            size /= 1024
-            i += 1
-
-        # Fix the display issue by rounding to 1 decimal place for KB
-        if i == 1:  # KB unit
-            formatted_size = f"{size:.1f}"
-        else:
-            formatted_size = f"{size:.2f}"
-
-        if plain:
-            return f"{formatted_size} {units[i]}"
-        return f"[bold yellow]{formatted_size}[/bold yellow] [bold]{units[i]}[/bold]"

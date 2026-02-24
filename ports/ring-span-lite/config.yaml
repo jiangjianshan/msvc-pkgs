@@ -2,5 +2,4 @@ name: ring-span-lite
 version: 0.7.0
 url: https://github.com/nonstd-lite/ring-span-lite/archive/refs/tags/v0.7.0.tar.gz
 sha256: 7650bb1bcf76cb0f7ac75240c5346203cbe7eb7027c0843c60253f6db08a93c1
-dependencies:
 script: build.bat

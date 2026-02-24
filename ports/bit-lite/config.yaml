@@ -2,5 +2,4 @@ name: bit-lite
 version: 2.0.0
 url: https://github.com/nonstd-lite/bit-lite/archive/refs/tags/v2.0.0.tar.gz
 sha256: 9078970f60ff39ca2b46015ec9ee122ee238119157ec4b9098850ed10ef1a711
-dependencies:
 script: build.bat

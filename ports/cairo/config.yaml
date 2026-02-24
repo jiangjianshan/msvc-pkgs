@@ -4,15 +4,22 @@ url: https://www.cairographics.org/releases/cairo-1.18.4.tar.xz
 sha256: 445ed8208a6e4823de1226a74ca319d3600e83f6369f99b14265006599c32ccb
 dependencies:
   required:
-    - pkg-config
+    - bzip2
+    - brotli
+    - expat
     - fontconfig
     - freetype
-    - libpng
+    - gettext
     - glib
+    - harfbuzz:required
+    - libpng
     - libffi
+    - libiconv
     - libatomic_ops
     - lzo
+    - mspcrt
+    - pcre2
+    - pkg-config
     - pixman
     - zlib
-    - mspcrt
 script: build.bat

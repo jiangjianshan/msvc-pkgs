@@ -5,7 +5,9 @@ sha256: 2e0b57ce2fecc9375eef72938ed08ac8c8f6c5238e1cae24458f0b0e8dade7c7
 dependencies:
   required:
     - flac
+    - libogg
     - liboggz
     - libvorbis
+    - mspcrt
     - speex
 script: build.sh

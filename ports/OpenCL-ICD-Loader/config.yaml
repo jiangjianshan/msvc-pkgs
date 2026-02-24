@@ -4,6 +4,5 @@ url: https://github.com/KhronosGroup/OpenCL-ICD-Loader/archive/refs/tags/v2024.1
 sha256: 95f2f0cda375b13d2760290df044ebea9c6ff954a7d7faa0867422442c9174dc
 dependencies:
   required:
-    - mspcrt
     - OpenCL-Headers
 script: build.bat

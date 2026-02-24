@@ -13,15 +13,10 @@ rem   PKG_VER       - Version of the current library being built.
 rem   ROOT_DIR      - Root directory of the msvc-pkg project.
 rem   SRC_DIR       - Source code directory of the current library.
 rem   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-rem                   This path is where the built artifacts for *this specific library* will be installed.
-rem                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-rem                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 rem   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-rem   _PREFIX       - **Default installation path prefix** for all built libraries.
-rem                   This is the root directory where libraries are installed **unless overridden**
-rem                   by a specific `PREFIX` setting for an individual library.
 rem
 rem   For each direct dependency `{Dependency}` of the current library:
+rem     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 rem     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 rem     {Dependency}_VER - Version of the dependency `{Dependency}`.
 
@@ -30,7 +25,7 @@ set BUILD_DIR=%SRC_DIR%\src
 rem NOTE: Don't add '-utf-8' to build this library, otherwise will have the issue "'/utf-8' and '/source-charset:utf-8' command-line options are incompatible"
 set C_OPTS=-diagnostics:column -experimental:c11atomics -fp:precise -MD -nologo -openmp:llvm
 set C_DEFS=-DWIN32 -D_WIN32_WINNT=_WIN32_WINNT_WIN10 -D_CRT_DECLARE_NONSTDC_NAMES -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS -D_USE_MATH_DEFINES -DNOMINMAX
-set CL=%C_OPTS% %C_DEFS%
+set CL=-MP %C_OPTS% %C_DEFS%
 
 call :clean_stage
 call :configure_stage
@@ -49,13 +44,6 @@ exit /b 0
 :build_stage
 echo "Building %PKG_NAME% %PKG_VER%"
 cd "%BUILD_DIR%"
-if not defined GETTEXT_PREFIX set GETTEXT_PREFIX=%_PREFIX%
-if not defined LIBICONV_PREFIX set LIBICONV_PREFIX=%_PREFIX%
-if not defined LUA_PREFIX set LUA_PREFIX=%_PREFIX%
-if not defined PERL_PREFIX set PERL_PREFIX=%_PREFIX%
-if not defined RUBY_PREFIX set RUBY_PREFIX=%_PREFIX%
-if not defined TCL_PREFIX set TCL_PREFIX=%_PREFIX%
-if not defined SODIUM_PREFIX set SODIUM_PREFIX=%_PREFIX%
 for /f "tokens=2" %%v in ('python --version 2^>nul') do (
   set "python_version=%%v"
 )
@@ -111,7 +99,8 @@ exit /b 0
 
 :install_stage
 echo "Installing %PKG_NAME% %PKG_VER%"
-cd "%BUILD_DIR%"
+cd "%SRC_DIR%"
+pushd src
 for /f "tokens=1,2,3" %%a in ('findstr /r /c:"^#define VIM_VERSION_MAJOR" "version.h"') do (
     if "%%a"=="#define" if "%%b"=="VIM_VERSION_MAJOR" (
         set "vim_major=%%c"
@@ -122,63 +111,60 @@ for /f "tokens=1,2,3" %%a in ('findstr /r /c:"^#define VIM_VERSION_MINOR" "versi
         set "vim_minor=%%c"
     )
 )
-set "vim_major_minor=%vim_major%%vim_minor%"
-set "VIM_RUNTIME_DIR=%PREFIX%\Vim%vim_major_minor%"
-if not exist "vim%vim_major_minor%" mkdir "vim%vim_major_minor%"
-if not exist "GvimExt64" mkdir GvimExt64
-if not exist "GvimExt32" mkdir GvimExt32
-rem Build both 64- and 32-bit versions of gvimext.dll for the installer
-start /wait cmd /c ""%vcvarsall%" x64 && cd GvimExt && nmake -f Make_mvc.mak CPU=AMD64 WINVER=0x0A00 clean all"
-copy GvimExt\gvimext.dll GvimExt\gvimext64.dll
-move GvimExt\gvimext.dll GvimExt64\gvimext.dll
-copy /Y GvimExt\README.txt GvimExt64\
-copy /Y GvimExt\*.inf  GvimExt64\
-copy /Y GvimExt\*.reg  GvimExt64\
+popd
+set "VIM_RUNTIME_DIR=%PREFIX%\vim%vim_major%%vim_minor%"
+if not exist "%VIM_RUNTIME_DIR%" mkdir "%VIM_RUNTIME_DIR%"
+echo 1. Create a Vim "runtime" subdirectory named "vim91"
+xcopy /Y /E /V /I /H /R /Q runtime\* %VIM_RUNTIME_DIR%
+echo 2. Copy the new binaries into the "vim91" directory
+copy /Y src\*.exe "%VIM_RUNTIME_DIR%"
+copy /Y src\tee\tee.exe "%VIM_RUNTIME_DIR%"
+copy /Y src\xxd\xxd.exe "%VIM_RUNTIME_DIR%"
+echo 3. To install the "Edit with Vim" popup menu, you need both 32-bit and 64-bit
+echo    versions of gvimext.dll.  They should be copied to "vim91\GvimExt32" and
+echo    "vim91\GvimExt64" respectively.
+powershell -Command "Get-Process | Where-Object { $_.Modules.FileName -like '*gvimext.dll' } | ForEach-Object { Write-Host 'Found process: PID='$_.Id' name='$_.ProcessName; Stop-Process -Id $_.Id -Force }" 2>nul
+pushd "%BUILD_DIR%"
 start /wait cmd /c ""%vcvarsall%" x86 && cd GvimExt && nmake -f Make_mvc.mak CPU=i386 WINVER=0x0A00 clean all"
-copy GvimExt\gvimext.dll GvimExt32\gvimext.dll
-copy /Y GvimExt\README.txt GvimExt32\
-copy /Y GvimExt\*.inf  GvimExt32\
-copy /Y GvimExt\*.reg  GvimExt32\
-copy /Y ..\README.txt ..\runtime
-copy /Y ..\vimtutor.bat ..\runtime
-copy /Y *.exe ..\runtime\
-copy /Y xxd\*.exe ..\runtime
-copy /Y tee\*.exe ..\runtime
-mkdir ..\runtime\GvimExt64
-mkdir ..\runtime\GvimExt32
-copy /Y GvimExt64\*.*  ..\runtime\GvimExt64\
-copy /Y %GETTEXT_PREFIX%\bin\iconv-2.dll  ..\runtime\GvimExt64\
-copy /Y %GETTEXT_PREFIX%\bin\intl-8.dll  ..\runtime\GvimExt64\
-copy /Y GvimExt32\*.*  ..\runtime\GvimExt32\
-copy /Y %GETTEXT_PREFIX:x64=x86%\bin\iconv-2.dll      ..\runtime\GvimExt32\
-copy /Y %GETTEXT_PREFIX:x64=x86%\bin\intl-8.dll       ..\runtime\GvimExt32\
-copy /Y %GETTEXT_PREFIX%\bin\iconv-2.dll   ..\runtime\
-copy /Y %GETTEXT_PREFIX%\bin\intl-8.dll    ..\runtime\
-cd "%SRC_DIR%"
-echo Copying the "runtime" files into "Vim%vim_major_minor%"
-xcopy /Y /E /V /I /H /R /Q runtime\* "%VIM_RUNTIME_DIR%"
-echo Copy the new binaries into the "Vim%vim_major_minor%" directory
-copy /Y src\*.exe %VIM_RUNTIME_DIR%
-copy /Y src\tee\tee.exe %VIM_RUNTIME_DIR%
-copy /Y src\xxd\xxd.exe %VIM_RUNTIME_DIR%
-rem To install the "Edit with Vim" popup menu, you need both 32-bit and 64-bit
-rem versions of gvimext.dll.  They should be copied to "Vim91\GvimExt32" and
-rem "Vim91\GvimExt64" respectively
-if not exist %VIM_RUNTIME_DIR%\GvimExt32 (
-  mkdir %VIM_RUNTIME_DIR%\GvimExt32
+popd
+if not exist "%VIM_RUNTIME_DIR%\GvimExt32" mkdir "%VIM_RUNTIME_DIR%\GvimExt32"
+copy /Y src\GvimExt\gvimext.dll %VIM_RUNTIME_DIR%\GvimExt32 || exit 1
+pushd "%BUILD_DIR%"
+start /wait cmd /c ""%vcvarsall%" x64 && cd GvimExt && nmake -f Make_mvc.mak CPU=AMD64 WINVER=0x0A00 clean all"
+popd
+if not exist "%VIM_RUNTIME_DIR%\GvimExt64" mkdir "%VIM_RUNTIME_DIR%\GvimExt64"
+copy /Y src\GvimExt\gvimext.dll "%VIM_RUNTIME_DIR%\GvimExt64" || exit 1
+echo 4. Copy gettext and iconv DLLs into the "vim91" directory
+copy /Y "%LIBICONV_PREFIX%\bin\iconv-2.dll" "%VIM_RUNTIME_DIR%\GvimExt64" || exit 1
+copy /Y "%GETTEXT_PREFIX%\bin\intl-8.dll" "%VIM_RUNTIME_DIR%\GvimExt64" || exit 1
+if not exist "%LIBICONV_PREFIX:x86_64=i686%\bin\iconv-2.dll" (
+  echo "Missing x86 variant of iconv-2.dll"
+  echo "You should run 'mpt --arch x86 gettext' before 'mpt vim'"
+  exit 1
 )
-copy /Y src\GvimExt32\gvimext.dll %VIM_RUNTIME_DIR%\GvimExt32
-if not exist %VIM_RUNTIME_DIR%\GvimExt64 (
-  mkdir %VIM_RUNTIME_DIR%\GvimExt64
+if not exist "%GETTEXT_PREFIX:x86_64=i686%\bin\intl-8.dll" (
+  echo "Missing x86 variant of iconv-2.dll"
+  echo "You should run 'mpt --arch x86 gettext' before 'mpt vim'"
+  exit 1
 )
-copy /Y src\GvimExt64\gvimext.dll %VIM_RUNTIME_DIR%\GvimExt64
-rem Copy gettext and iconv DLLs into the "Vim91" directory
-rem See above, they have been done when copy the content from runtime folder
-if not exist "%PREFIX%\vimfiles" mkdir %PREFIX%\vimfiles
-cd "%VIM_RUNTIME_DIR%"
-install -create-batfiles -install-popup -install-openwith -add-start-menu -install-icons -create-directories vim
-del /s /q "C:\Users\Public\Desktop\gVim Read only %vim_major%.%vim_minor%.lnk"
-del /s /q "C:\Users\Public\Desktop\gVim Easy %vim_major%.%vim_minor%.lnk"
+copy /Y "%LIBICONV_PREFIX:x86_64=i686%\bin\iconv-2.dll" %VIM_RUNTIME_DIR%\GvimExt32 || exit 1
+copy /Y "%GETTEXT_PREFIX:x86_64=i686%\bin\intl-8.dll" %VIM_RUNTIME_DIR%\GvimExt32 || exit 1
+copy /Y "%LIBICONV_PREFIX%\bin\iconv-2.dll" %VIM_RUNTIME_DIR% || exit 1
+copy /Y "%GETTEXT_PREFIX%\bin\intl-8.dll" %VIM_RUNTIME_DIR% || exit 1
+echo If vim has been installed before and here just rebuild it, The following step to install
+echo Vim can be ignored:
+echo ---------------
+echo "cd" to your Vim installation subdirectory "vim%vim_major_minor%" and run the
+echo "install.exe" program.  It will ask you a number of questions about
+echo how you would like to have your Vim setup.  Among these are:
+echo - You can tell it to write a "_vimrc" file with your preferences in the
+echo   parent directory.
+echo - It can also install an "Edit with Vim" entry in the Windows Explorer
+echo   popup menu.
+echo - You can have it create batch files, so that you can run Vim from the
+echo   console or in a shell.  You can select one of the directories in your
+echo   PATH or add the directory to PATH using the Windows Control Panel.
+echo - Create entries for Vim on the desktop and in the Start menu.
 exit /b 0
 
 :end

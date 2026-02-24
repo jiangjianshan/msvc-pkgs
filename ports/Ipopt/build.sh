@@ -12,18 +12,12 @@
 #   ROOT_DIR      - Root directory of the msvc-pkg project.
 #   SRC_DIR       - Source code directory of the current library.
 #   PREFIX        - **Actual installation path prefix** for the *current* library after successful build.
-#                   This path is where the built artifacts for *this specific library* will be installed.
-#                   It usually equals `_PREFIX`, but **may differ** if a non-default installation path
-#                   was explicitly specified for this library (e.g., `D:\LLVM` for `llvm-project`).
 #   PREFIX_PATH   - List of installation directory prefixes for third-party dependencies.
-#   _PREFIX       - **Default installation path prefix** for all built libraries.
-#                   This is the root directory where libraries are installed **unless overridden**
-#                   by a specific `PREFIX` setting for an individual library.
 #
 #   For each direct dependency `{Dependency}` of the current library:
+#     {Dependency}_PREFIX - Actual installation path of the dependency `{Dependency}`.
 #     {Dependency}_SRC - Source code directory of the dependency `{Dependency}`.
 #     {Dependency}_VER - Version of the dependency `{Dependency}`.
-
 . $ROOT_DIR/compiler.sh $ARCH oneapi
 BUILD_DIR=$SRC_DIR/build${ARCH//x/}
 C_OPTS='-diagnostics:column -MD -nologo -utf-8 -W0 -Xclang -O2 -fopenmp -fms-extensions -fms-hotpatch -fms-compatibility -fms-compatibility-version='${MSC_VER}
@@ -85,9 +79,9 @@ configure_stage()
   CXXFLAGS="-EHsc $C_OPTS"                                                     \
   CXXCPP="clang-cl -E"                                                         \
   DLLTOOL="link -verbose -dll"                                                 \
-  F77="ifort"                                                                  \
+  F77="ifx"                                                                    \
   FFLAGS="-f77rtl $F_OPTS"                                                     \
-  FC="ifort"                                                                   \
+  FC="ifx"                                                                     \
   FCFLAGS="$F_OPTS"                                                            \
   LD="lld-link"                                                                \
   LDFLAGS="-fuse-ld=lld"                                                       \
@@ -103,7 +97,7 @@ configure_stage()
     --enable-msvc                                                              \
     --enable-shared                                                            \
     --with-lapack-lflags="-lblas -llapack"                                     \
-    --with-spral-cflags="-I$(cygpath -u "${SPRAL_PREFIX:-$_PREFIX}")/include"  \
+    --with-spral-cflags="-I$(cygpath -u "$SPRAL_PREFIX")/include"              \
     --with-spral-lflags="-lspral"                                              \
     ac_cv_prog_f77_v="-verbose"                                                \
     ac_cv_prog_fc_v="-verbose"                                                 \

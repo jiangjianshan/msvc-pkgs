@@ -5,6 +5,5 @@ sha256: 6c6fe90babfa09bd3c544643d3fc3ea9516f9cbc74e8b3342f0d50416862b76f
 dependencies:
   required:
     - lz4
-    - mspcrt
     - zlib
 script: build.bat

@@ -4,5 +4,8 @@ url: https://github.com/webmproject/libvpx/archive/refs/tags/v1.14.1.tar.gz
 sha256: 901747254d80a7937c933d03bd7c5d41e8e6c883e0665fadcb172542167c7977
 dependencies:
   required:
+    - gettext
+    - libiconv
+    - mspcrt
     - yasm
 script: build.sh

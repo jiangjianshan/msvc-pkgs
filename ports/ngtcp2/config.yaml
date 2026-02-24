@@ -1,0 +1,12 @@
+name: ngtcp2
+version: v1.20.0
+url: https://github.com/ngtcp2/ngtcp2.git
+recursive: true
+depth: 1
+dependencies:
+  required:
+    - brotli
+    - libev
+    - nghttp3
+    - openssl
+script: build.bat

@@ -1,6 +1,6 @@
 diff -urN usr-orig/bin/libtool usr/bin/libtool
---- usr-orig/bin/libtool	2025-09-08 14:57:58.119315800 +0800
-+++ usr/bin/libtool	2025-09-08 15:08:39.596682100 +0800
+--- usr-orig/bin/libtool	2025-09-22 21:23:03.000000000 +0800
++++ usr/bin/libtool	2026-02-23 17:26:03.516638200 +0800
 @@ -9822,7 +9822,7 @@
  	  # Some compilers have problems with a '.al' extension so
  	  # convenience libraries should have the same extension an
@@ -47,8 +47,8 @@ diff -urN usr-orig/bin/libtool usr/bin/libtool
  
        # Preserve any variables that may affect compiler behavior
 diff -urN usr-orig/share/aclocal/libtool.m4 usr/share/aclocal/libtool.m4
---- usr-orig/share/aclocal/libtool.m4	2025-09-08 14:57:58.134939700 +0800
-+++ usr/share/aclocal/libtool.m4	2025-09-08 15:07:40.081057700 +0800
+--- usr-orig/share/aclocal/libtool.m4	2025-09-22 21:23:03.000000000 +0800
++++ usr/share/aclocal/libtool.m4	2026-02-23 17:32:06.563875400 +0800
 @@ -2409,7 +2409,7 @@
    sys_lib_search_path_spec="/lib /usr/lib /usr/local/lib"
  fi])
@@ -63,7 +63,7 @@ diff -urN usr-orig/share/aclocal/libtool.m4 usr/share/aclocal/libtool.m4
      ;;
  
 -  *,cl* | *,icl*)
-+  *,cl* | *,icl* | *,ifort* | *,icx* | *,ifx* | *,clang*)
++  *,cl* | *,icl* | *,ifort* | *,icx-cl* | *,ifx* | *,clang-cl*)
      # Native MSVC or ICC
      libname_spec='$name'
      soname_spec='$libname`echo $release | $SED -e 's/[[.]]/-/g'`$versuffix$shared_ext'
@@ -74,10 +74,10 @@ diff -urN usr-orig/share/aclocal/libtool.m4 usr/share/aclocal/libtool.m4
      mingw* | windows*)
 @@ -5083,7 +5083,7 @@
      ;;
-   cygwin* | msys* | mingw* | windows* | cegcc*)
+   cygwin* | mingw* | windows* | cegcc*)
      case $cc_basename in
 -    cl* | icl*)
-+    cl* | icl* | ifort* | icx* | ifx* | clang*)
++    cl* | icl* | ifort* | icx-cl* | ifx* | clang-cl*)
        _LT_TAGVAR(exclude_expsyms, $1)='_NULL_IMPORT_DESCRIPTOR|_IMPORT_DESCRIPTOR_.*'
        ;;
      *)
@@ -86,7 +86,7 @@ diff -urN usr-orig/share/aclocal/libtool.m4 usr/share/aclocal/libtool.m4
        # no search path for DLLs.
        case $cc_basename in
 -      cl* | icl*)
-+      cl* | icl* | ifort* | icx* | ifx* | clang*)
++      cl* | icl* | ifort* | icx-cl* | ifx* | clang-cl*)
  	# Native MSVC or ICC
  	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)=' '
  	_LT_TAGVAR(allow_undefined_flag, $1)=unsupported
@@ -109,10 +109,10 @@ diff -urN usr-orig/share/aclocal/libtool.m4 usr/share/aclocal/libtool.m4
  	# _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
 @@ -6799,7 +6799,7 @@
  
-       cygwin* | msys* | mingw* | windows* | pw32* | cegcc*)
+       cygwin* | mingw* | windows* | pw32* | cegcc*)
  	case $GXX,$cc_basename in
 -	,cl* | no,cl* | ,icl* | no,icl*)
-+	,cl* | no,cl* | ,icl* | no,icl* | ,ifort* | no,ifort* | ,icx* | no,icx* | ,ifx* | no,ifx* | ,clang* | no,clang*)
++	,cl* | no,cl* | ,icl* | no,icl* | ,ifort* | no,ifort* | ,icx-cl* | no,icx-cl* | ,ifx* | no,ifx* | ,clang-cl* | no,clang-cl*)
  	  # Native MSVC or ICC
  	  # hardcode_libdir_flag_spec is actually meaningless, as there is
  	  # no search path for DLLs.
@@ -133,9 +133,9 @@ diff -urN usr-orig/share/aclocal/libtool.m4 usr/share/aclocal/libtool.m4
              linknames='
  	  # The linker will not automatically build a static lib if we build a DLL.
  	  # _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
-diff -urN usr-orig/share/libtool/build-aux/ltmain.sh Git/usr/share/libtool/build-aux/ltmain.sh
---- usr-orig/share/libtool/build-aux/ltmain.sh	2025-09-08 14:57:58.167552300 +0800
-+++ usr/share/libtool/build-aux/ltmain.sh	2025-09-08 15:08:39.594185500 +0800
+diff -urN usr-orig/share/libtool/build-aux/ltmain.sh usr/share/libtool/build-aux/ltmain.sh
+--- usr-orig/share/libtool/build-aux/ltmain.sh	2025-09-22 21:23:03.000000000 +0800
++++ usr/share/libtool/build-aux/ltmain.sh	2026-02-23 17:26:03.511651400 +0800
 @@ -9289,7 +9289,7 @@
  	  # Some compilers have problems with a '.al' extension so
  	  # convenience libraries should have the same extension an
@@ -181,15 +181,15 @@ diff -urN usr-orig/share/libtool/build-aux/ltmain.sh Git/usr/share/libtool/build
        func_verbose "creating $output"
  
        # Preserve any variables that may affect compiler behavior
-diff -urN usr-orig/share/libtool/configure Git/usr/share/libtool/configure
---- usr-orig/share/libtool/configure	2025-09-08 14:57:58.183760600 +0800
-+++ usr/share/libtool/configure	2025-09-08 15:07:10.869329800 +0800
+diff -urN usr-orig/share/libtool/configure usr/share/libtool/configure
+--- usr-orig/share/libtool/configure	2025-09-22 21:23:03.000000000 +0800
++++ usr/share/libtool/configure	2026-02-23 17:31:08.532659400 +0800
 @@ -10914,7 +10914,7 @@
        # hardcode_libdir_flag_spec is actually meaningless, as there is
        # no search path for DLLs.
        case $cc_basename in
 -      cl* | icl*)
-+      cl* | icl* | ifort* | icx* | ifx* | clang*)
++      cl* | icl* | ifort* | icx-cl* | ifx* | clang-cl*)
  	# Native MSVC or ICC
  	hardcode_libdir_flag_spec=' '
  	allow_undefined_flag=unsupported
@@ -224,7 +224,7 @@ diff -urN usr-orig/share/libtool/configure Git/usr/share/libtool/configure
      ;;
  
 -  *,cl* | *,icl*)
-+  *,cl* | *,icl* | *,ifort* | *,icx* | *,ifx* | *,clang*)
++  *,cl* | *,icl* | *,ifort* | *,icx-cl* | *,ifx* | *,clang-cl*)
      # Native MSVC or ICC
      libname_spec='$name'
      soname_spec='$libname`echo $release | $SED -e 's/[.]/-/g'`$versuffix$shared_ext'

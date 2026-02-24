@@ -6,4 +6,6 @@ dependencies:
   required:
     - libjpeg-turbo
     - libpng
+    - mspcrt
+    - zlib
 script: build.sh

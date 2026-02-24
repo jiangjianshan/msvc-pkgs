@@ -2,5 +2,4 @@ name: optional-bare
 version: 1.1.0
 url: https://github.com/nonstd-lite/optional-bare/archive/refs/tags/v1.1.0.tar.gz
 sha256: 85eb623ae864c769ca5dde8e6cbb1d9a1d3eedb7ae12466edded3722875e5492
-dependencies:
 script: build.bat

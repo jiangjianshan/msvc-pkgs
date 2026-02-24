@@ -7,5 +7,4 @@ dependencies:
     - Catch2
     - fmt
     - benchmark
-    - mspcrt
 script: build.bat

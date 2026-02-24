@@ -8,5 +8,4 @@ dependencies:
     - libxml2
     - pcre2
     - yaml
-    - mspcrt
 script: build.bat

@@ -6,5 +6,4 @@ dependencies:
   required:
     - fftw
     - googletest
-    - mspcrt
 script: build.bat

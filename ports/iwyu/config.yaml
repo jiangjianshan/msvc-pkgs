@@ -1,11 +1,14 @@
 name: iwyu
-version: '0.25'
+version: 0.25
 url: https://include-what-you-use.org/downloads/include-what-you-use-0.25.src.tar.gz
 sha256: be81f9d5498881462465060ddc28b587c01254255c706d397d1a494d69eb5efd
 dependencies:
   required:
-    - llvm-project
+    - icu4c
+    - libiconv
     - libxml2
-    - zstd
+    - llvm-project
+    - xz
     - zlib
+    - zstd
 script: build.bat

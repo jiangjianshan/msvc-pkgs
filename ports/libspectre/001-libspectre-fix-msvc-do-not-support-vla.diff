@@ -1,0 +1,15 @@
+diff -urN libspectre-0.2.12-orig/libspectre/spectre-exporter-pdf.c libspectre-0.2.12/libspectre/spectre-exporter-pdf.c
+--- libspectre-0.2.12-orig/libspectre/spectre-exporter-pdf.c	2023-01-08 19:37:43.000000000 +0800
++++ libspectre-0.2.12/libspectre/spectre-exporter-pdf.c	2026-02-21 11:43:45.741650900 +0800
+@@ -29,7 +29,11 @@
+ 			    const char      *filename)
+ {
+ 	static const int kArgs = 9;
++#ifdef _MSC_VER
++	char *args[9];
++#else
+ 	char *args[kArgs];
++#endif
+ 	int arg = 0;
+ 	char *output_file;
+ 	struct document *doc = exporter->doc;

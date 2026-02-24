@@ -1,0 +1,25 @@
+name: pygobject
+version: 3.55.3
+url: https://download.gnome.org/sources/pygobject/3.55/pygobject-3.55.3.tar.gz
+sha256: 14f52750312bd689dde3a75e968849e3e16c4a0803f1c7734dffb00a1c847af9
+dependencies:
+  required:
+    - brotli
+    - bzip2
+    - cairo
+    - expat
+    - fontconfig
+    - freetype
+    - gettext
+    - glib
+    - gobject-introspection
+    - harfbuzz
+    - libffi
+    - libiconv
+    - libpng
+    - mspcrt
+    - pcre2
+    - pixman:required
+    - pkg-config
+    - zlib
+script: build.bat
